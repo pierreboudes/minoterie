@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" dir="ltr">
+
+<head>
+<title>Pain -- gestion des enseignements et des services</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" media="all" href="general.css"
+type='text/css' />
+<link type="text/css" href="custom-theme/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
+<style type='text/css'>
+.glue  {
+  background: url('img/semi-transparentorange.png'); 
+}
+
+.sb {
+ border: thin red dotted;
+}
+
+div.bg {
+ background-color: red;
+}
+</style>
+</head>
+
+<body>
+<h1>Vue principale</h1>
+
+
+<table id="tableannees" class="super">
+<tbody>
+<tr>
+  <td colspan="3" class="glue">
+    <pre><-- width: 879px --></pre>
+ </td>
+</tr>
+<tr class="annee">
+<th class="laction"></th>
+<th class="annee_universitaire">Année universitaire</th>
+<th class="totaux">stats</th>
+</tr>
+<tr>
+<td class="glue" colspan="2">
+      <pre><-- 70px --></pre>
+</td>
+<td class="glue">
+      <pre><-- auto --></pre>
+</td>
+</tr>
+<tr id="annee_2011" class="annee">
+<td class="laction">
+<div class="handle annee ui-draggable"></div>
+<div id="basculeannee2011" class="basculeOff ui-droppable"></div>
+<div class="palette"></div>
+</td>
+<td class="annee_universitaire">2011-2012</td>
+<td class="totaux">
+</tr>
+</tbody>
+</table>
+<pre>
+table.super {
+    max-width: 879px;
+    width: 879px;
+    border-collapse: collapse;
+    border-style: solid;
+    border-width: 2px;
+    margin: auto;
+}
+</pre>
+
+<table class="super mep">
+<tbody>
+<tr class="annee">
+<td class="laction">
+<div class="handle annee ui-draggable bg"></div>
+<div class="basculeOff ui-droppable sb"></div>
+<div class="palette"></div>
+</td><td class="glue"><pre><-- td.laction (0px). div flottants div.handle, div.basculeOff et div.palette </pre></td>
+</tr>
+</tbody>
+</table>
+
+<pre>
+.laction {
+    padding-left: 0;
+    padding-right: 0;
+    width: 0;
+}
+
+td.laction > div.handle {
+    float: left;
+    height: 20px;
+    margin-left: -6px;
+    margin-right: 0;
+    width: 6px;
+    background-color: #3771C8;
+}
+
+div.basculeOff {
+    background-image: url("img/triangleLR.png");
+    cursor: pointer;
+    float: left;
+    margin-left: -30px;
+    height: 20px;
+    width: 20px;
+}
+
+th.laction > div.palette, td.laction > div.palette {
+    float: left;
+    height: 24px;
+    margin: 0 0 0 -32px;
+    padding: 0;
+}
+</pre>
+
+
+<h2>Formation (sformation)</h2>
+
+<table class="tablesupers" style="margin:auto;">
+<tbody>
+<tr>  <td class="glue" colspan=4> <pre><-- width: auto --></pre></td> </tr>
+<tr class="sformation">
+<th class="laction"></th>
+<th class="nom">nom</th>
+<th class="enseignant">responsable</th>
+<th class="totaux">stats</th>
+</tr>
+<tr class="sformation">
+<td class="laction">
+<div class="handle sformation ui-draggable"></div>
+<div class="basculeOff ui-droppable"></div>
+<div class="palette"></div>
+</td>
+<td class="nom mutable">Licence</td>
+<td class="enseignant mutable">
+<a class="enseignant" href="service.php?id_enseignant=3">libre </a>
+<span class="hiddenvalue">3</span>
+</td>
+<td class="totaux">
+</td>
+</tr>
+<tr>
+  <td>
+  </td>
+<td class="glue">
+  width: 150px
+</td>
+<td class="glue">
+    min: 150px
+
+</td>
+<td class="glue">
+    min: 500px
+</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Année de formation (formation)</h2>
+
+<table class="tableformations">
+<tbody>
+<tr class="formation">
+<th class="laction"></th>
+<th class="intitule">intitulé</th>
+<th class="enseignant">responsable</th>
+<th class="totaux">totaux</th>
+</tr>
+<tr class="imgformation">
+<td class="imgformation" colspan="1">
+</tr>
+<tr class="formation">
+<td class="laction">
+<td class="intitule">Commun toutes licences semestre 1 0 </td>
+<td class="enseignant mutable">
+<td class="totaux">
+</tr>
+</tbody>
+</table>
+
+<h2>Cours</h2>
+
+<table class="cours">
+<tbody>
+  <tr>
+    <td class="glue" colspan=19>
+       <pre>width: 877px</pre>
+    </td>
+  </tr>
+<tr class="cours">
+<th class="laction"></th>
+<th class="nom_cours">Intitulé</th>
+<th class="semestre">Semestre</th>
+<th class="credits">Crédits</th>
+<th class="enseignant">Responsable</th>
+<th class="cm">CM</th>
+<th class="td">TD</th>
+<th class="tp">TP</th>
+<th class="alt">alt.</th>
+<th class="debut">Début</th>
+<th class="fin">Fin</th>
+<th class="mcc">MCC</th>
+<th class="inscrits">Inscrits</th>
+<th class="presents">Présents</th>
+<th class="tirage">Tirage</th>
+<th class="descriptif">Remarque</th>
+<th class="code_geisha">Code</th>
+<th class="totaux_loader">stats</th>
+<th class="action">
+<div class="palette">
+</th>
+</tr>
+<tr>
+  <td>
+  </td>
+    <td class="glue">
+      min: 100px
+  </td>
+  <td class="glue">
+    max: 80px
+  </td>
+  <td class="glue">
+    80px
+  </td>
+  <td class="glue">
+    min: 100px
+  </td>
+  <td class="glue">
+    30, 60px
+  </td>
+  <td class="glue">
+    30, 60px
+  </td>
+  <td class="glue">
+    30, 60px
+  </td>
+  <td class="glue">
+    30, 60px
+  </td>
+  <td class="glue">
+    30, 70px
+  </td>
+  <td class="glue">
+    30, 70px
+  </td>
+  <td class="glue">
+    auto
+  </td>
+  <td class="glue">
+    30, 60px    
+  </td>
+  <td class="glue">
+    30, 60px
+  </td>
+  <td class="glue">
+    30, 60px
+  </td>
+  <td class="glue">
+    min: 140px
+  </td>
+  <td class="glue">
+    auto
+  </td>
+  <td class="glue">
+    auto
+  </td>
+    <td>
+  </td>
+</tr>
+<tr class="imgcours">
+<td class="imgcours" colspan="19">
+<div class="imgcours">
+<pre class="glue"> imgcours a maintenant le bon colspan</pre>
+  </div>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<H2> Tags </H2>
+<table class="cours">
+<tbody>
+<tr class="cours">
+  <td class="glue" style="width: 30%;">
+  </td>
+  <td class="tags">
+    <span class="tag">
+   système <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+    réseaux <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>     
+    <span class="tag">
+    analyse fonctionnelle <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+   théorie ergodique <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+    équilibres de Nash <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+    <button class="button-ajouter_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span> 
+  </td>
+  <td class="glue" style="width: 30%;">
+  </td>
+</tr>
+</tbody>
+</table>
+
+<table class="cours">
+<tbody>
+<tr class="cours">
+  <td class="glue" style="width: 30%;">
+  </td>
+  <td class="tags">
+    <span class="tag">
+   système <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+    réseaux <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>     
+    <span class="tag">
+    analyse fonctionnelle <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+   théorie ergodique <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+    équilibres de Nash <button class="button-enlever_tag" role="button"
+    aria-disabled="false" title="enlever"><span class="icon">&nbsp;</span></button>
+    </span>
+    <span class="tag">
+    <input class="taginput" type="text" value=""/><span class="hiddenvalue"></span>
+    <button id="envoyertagcours_'+id_cours+'"class="button-envoyer_tag" role="button" aria-disabled="false" title="envoyer"><span class="icon">&nbsp;</span></button>
+    </span> 
+  </td>
+  <td class="glue" style="width: 30%;">
+  </td>
+</tr>
+</tbody>
+</table>
+
+
+<h2>Cases affichées ou mises à jour après un double-clic</h2>
+
+
+<table class="cours">
+<tbody>
+<tr class="cours">
+  <td class="glue" style="width: 30%;">
+  </td>
+  <td class="stats inactive">
+    double-clic
+ </td>
+  <td class="glue" style="width: 30%;">
+  </td>
+</tr>
+</tbody>
+</table>
+
+
+
+</body> </html>
