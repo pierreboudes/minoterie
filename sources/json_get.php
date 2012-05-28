@@ -150,8 +150,7 @@ function json_get_php($annee, $readtype) {
 	    update_servicesreels($id_par);
 	    $requete .= " pain_service.id_enseignant = $id_par ";
         } else if (isset($_GET["id"])) {
-	    $id = getnumeric("id");
-	    list($id_ens,$an) = split('X',$id);
+	    list($id_ens,$an) = explode('X', getnumeric("id"));
 	    update_servicesreels($id_ens);
 	    $requete .= " id_enseignant = $id_ens AND annee_universitaire = $an ";
 	} else {
@@ -355,7 +354,7 @@ and pain_sformation.annee_universitaire = ".$annee."
                           FROM pain_sformation, pain_formation, pain_cours
                           WHERE id_cours = $id_par
                           AND pain_cours.id_formation = pain_formation.id_formation
-                          AND pain_formation.id_sformation = pain_formation.id_sformation)";	    
+                          AND pain_formation.id_sformation = pain_sformation.id_sformation)";	    
 	    $requete .= " ORDER BY nom_collection ASC";
         } else {
 	    errmsg("le type unusedcollections nécessite un id_parent");

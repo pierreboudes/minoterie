@@ -64,8 +64,5 @@ echo '</form>'."\n";
 </li>
 </ul>
 <?php
-echo '<div id="user" class="hiddenvalue">';
-echo '<span class="id">'.$user["id_enseignant"].'</span>';
-echo '<span class="su">'.$user["su"].'</span>';
-echo '</div>';
+
 ?>

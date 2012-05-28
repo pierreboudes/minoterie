@@ -1,23 +1,23 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Pain - outil de gestion des services d'enseignement        
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
  *
- * This file is part of Minoterie.
+ * This file is part of Pain.
  *
- * Minoterie is free software: you can redistribute it and/or modify it
+ * Pain is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Minoterie is distributed in the hope that it will be useful, but WITHOUT
+ * Pain is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
  * License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Pain.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('CAS.php');
 // error_reporting(E_ALL & ~E_NOTICE);
@@ -30,6 +30,8 @@ require_once('inc_connect.php');
 function set_year($annee) {
     setcookie("painAnnee", $annee, time()+3600);
 }
+
+date_default_timezone_set('Europe/Paris'); /* pour strtotime() */
 
 function default_year() {
     if (isset($_COOKIE["painAnnee"])) {// && is_numeric($_COOKIE["painAnnee"])
@@ -54,23 +56,14 @@ function annee_courante() {
     return $annee;
 }
 
-function pain_getuser() {
+function minoterie_getuser() {
     global $link;
     $login = phpCAS::getUser();
-    $query = "SELECT id_enseignant, prenom, nom, login, su, stats 
-                 FROM pain_enseignant 
+    $query = "SELECT id_utilisateur, login, id_departement, su 
+                 FROM minoterie_enseignant 
                  WHERE login LIKE '$login' LIMIT 1";
     $result = $link->query($query);
     if ($user = $result->fetch_array()) {
-	if ( (1 == $user["su"]) && isset($_COOKIE['painFakeId']) ){
-	    $query = "SELECT id_enseignant 
-                          FROM pain_enseignant 
-                          WHERE id_enseignant = ".$user["id"]." LIMIT 1";
-	    $result =$link->query($query);
-	    if ($result->fetch_array()) {
-		$user["id"] = cookieclean('painFakeId');
-	    }
-	}
 	return $user;
     } else {
 	return NULL;
@@ -79,17 +72,17 @@ function pain_getuser() {
 
 function authentication() {
     phpCAS::forceAuthentication();
-    $user = pain_getuser();
+    $user = minoterie_getuser();
     if (NULL == $user) {
 	$login = phpCAS::getUser();
-	die("D&eacute;sol&eacute; votre login ($login) n'est pas enregistr&eacute; dans la base du d&eacute;partement.Si vous &ecirc;tes membre du d&eactue;partement, vous pouvez envoyer un message votre &agrave; chef de d&eacute;partement avec votre login : $login. Pour sortir c'est par ici : <a href='logout.php'>logout</a>.");
+	die("D&eacute;sol&eacute; votre login ($login) n'est pas enregistr&eacute; dans la minoterie. Pour sortir c'est par ici : <a href='logout.php'>logout</a>.");
     }
     return $user;
 }
 
 function weak_auth() {
     phpCAS::forceAuthentication();
-    return pain_getuser();
+    return minoterie_getuser();
 }
 
 function authrequired() {

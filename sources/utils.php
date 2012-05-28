@@ -31,53 +31,101 @@ microsecoffset(); /* armee */
 function postclean($s) {
     global $link;
     if (isset($_POST[$s])) {
-	if(get_magic_quotes_gpc()) {
-	    return trim(htmlspecialchars($link->real_escape_string(stripslashes(($_POST[$s]))), ENT_QUOTES));
-	}
-	else {
-	    return trim(htmlspecialchars($link->real_escape_string($_POST[$s]), ENT_QUOTES));
-	}
+	$source = $_POST[$s];
+    } else if (isset($_GET[$s])) {
+	$source = $_GET[$s];
+    } else {
+	return NULL;
     }
-    else return NULL;
+    if(get_magic_quotes_gpc()) {
+	return trim(htmlspecialchars($link->real_escape_string(stripslashes($source)), ENT_QUOTES));
+    }
+    else {
+	return trim(htmlspecialchars($link->real_escape_string($source), ENT_QUOTES));
+    }
 }
 
-/** recupere une chaine passee en HTTP/GET
+/** recupere une chaine passee en HTTP/GET ou POST
  */
 function getclean($s) {
     global $link;
-    if (isset($_GET[$s])) {
-	if(get_magic_quotes_gpc()) {
-	    return trim(htmlspecialchars($link->real_escape_string(stripslashes(($_GET[$s]))), ENT_QUOTES));
-	}
-	else {
-	    return trim(htmlspecialchars($link->real_escape_string($_GET[$s]), ENT_QUOTES));
-	}
+    if (isset($_POST[$s])) {
+	$source = $_POST[$s];
+    } else if (isset($_GET[$s])) {
+	$source = $_GET[$s];
+    } else {
+	return NULL;
     }
-    else return NULL;
+    if(get_magic_quotes_gpc()) {
+	return trim(htmlspecialchars($link->real_escape_string(stripslashes($source)), ENT_QUOTES));
+    }
+    else {
+	return trim(htmlspecialchars($link->real_escape_string($source), ENT_QUOTES));
+    }
 }
 
-/** recupere un nombre passee en HTTP/GET
+/** recupere un nombre passee en HTTP/POST ou GET (ou une liste de nombres separes par des X)
  */
 function getnumeric($s) {
     global $link;
-    if (isset($_GET[$s]) && is_numeric($_GET[$s])) {
-	return $_GET[$s];
+    if (isset($_POST[$s])) {
+	$source = $_POST[$s];
+    } else if (isset($_GET[$s])) {
+	$source = $_GET[$s];
+    } else {
+	return NULL;
     }
-    else return NULL;
+    $a = explode('X',$source);
+    foreach ($a as $id) {
+	if (!is_numeric($id)) return NULL;
+    }
+    return $source;
 }
 
-/** recupere une liste de nombre passee en HTTP/GET
+
+/** recupere une liste de nombres separes par des virgules passee en HTTP/POST ou GET
  */
 function getlistnumeric($s) {
     global $link;
-    if (isset($_GET[$s])) {
-	$a = explode(',',$_GET[$s]);
-	foreach ($a as $id) {
-	    if (!is_numeric(trim($id))) return NULL;
-	}
-	return $_GET[$s];
+    if (isset($_POST[$s])) {
+	$source = $_POST[$s];
+    } else if (isset($_GET[$s])) {
+	$source = $_GET[$s];
+    } else {
+	return NULL;
     }
-    else return NULL;
+    $a = explode(',',$source);
+    foreach ($a as $id) {
+	if (!is_numeric(trim($id))) return NULL;
+    }
+    return $source;
+}
+
+/** recupere un tableau de tableau associatif passé par HTTP/POST en json
+    et échappe les chaînes pour php, mysql et html.
+ */
+function getjsonaofaa($s) {
+    global $link;
+    if (isset($_POST[$s])) {
+	$source = $_POST[$s];
+    } else if (isset($_GET[$s])) {
+	$source = $_GET[$s];
+    } else {
+	return NULL;
+    }
+    $o = json_decode($source, true); /* o tableau de tableaux associatifs */
+    foreach ($o as $i => $ligne) {
+	foreach ($ligne as $name => $cell) {
+	    if (!is_numeric(trim($cell))) {
+		if (!is_string($cell)) {
+		    $o[$i][$name] = "DEFAULT";
+		} else {
+		    $o[$i][$name] = "'".trim(htmlspecialchars($link->real_escape_string(stripslashes($cell)), ENT_QUOTES))."'";
+		}
+	    }
+	}
+    }
+    return $o;
 }
 
 

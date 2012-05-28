@@ -80,7 +80,7 @@ function ig_versionsvn() {
     echo "<pre>";
     echo "Dernière révision: ".$xml->logentry[0]['revision']."\n";
     echo "Par: ".$xml->logentry[0]->author."\n";
-    $date = split('T', $xml->logentry[0]->date);
+    $date = explode('T', $xml->logentry[0]->date);
     echo "Date: ".($date[0])."\n";
     echo "Message: ".$xml->logentry[0]->msg."\n";
     echo "</pre>";

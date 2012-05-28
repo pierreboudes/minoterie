@@ -95,11 +95,12 @@ if (isset($_GET["type"])) {
 	$ntype = 3;
     } else if ($readtype == "enseignant") {
 	$type = "enseignant";
-	$ntype = 4;
+	// $par = "categorie";
+	// $ntype = 4; TODO revoir structure BD pour cet historique
     } else if ($readtype == "service") {
 	$type = "service";
 	$par = "id_enseignant";
-	$ntype = 5;
+	// $ntype = 5; TODO revoir structure BD pour cet historique
     } else if ($readtype == "tag") {
 	$type = "tag";
 	$par = "descriptif";
@@ -218,7 +219,7 @@ if (isset($_GET["id_parent"])) {
 	return NULL;
     }
 
-    $id = $link->insert_id();
+    $id = $link->insert_id;
     if ($type == "service") {
 	$id = $id_parent.'X'.$an;
     }

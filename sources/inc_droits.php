@@ -30,6 +30,12 @@ function peuttoutfaire() {
     return false;
 }
 
+function peutimporterdeclarations($id_departement) {
+    global $user;
+    return peuttoutfaire() 
+	|| ($id_departement == $user["id_departement"]);
+}
+
 function peutediter($type, $id, $id_parent) {
     if ($id != NULL) {
 	if ($type == "sformation") return peuteditersformation($id);
@@ -270,7 +276,7 @@ function peutediterenseignant($id_enseignant = 0) {
 
 function peutediterservice($id_serv = 0X0) {
     global $user;
-    list($id_enseignant,$an) = split('X',$id_serv);
+    list($id_enseignant,$an) = explode('X', $id_serv);
     return ($user["su"] == 1) or ($id_enseignant == $user["id_enseignant"]);
 }
 
