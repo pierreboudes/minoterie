@@ -40,10 +40,7 @@ function ig_formselectannee($annee)
 ?>
 <ul id="menu">
       <li><a href="./">accueil</a></li>
-      <li><a href="service.php">service</a></li>
-      <li><a href="stats.php">stats</a></li>
-      <li><a href="enseignants.php">enseignants</a></li>
-      <li><a href="annuaire.php">annuaire</a></li>
+      <li><a href="departement.php">departement</a></li>
 <?php
     if (1 == $user["su"]) {
 	echo '<li><a href="admin.php">admin</a></li>';
@@ -51,18 +48,5 @@ function ig_formselectannee($annee)
 ?>
       <li><a href="logout.php">logout</a></li>
       <li>
-<?php
-
-echo '<form method="post" id="choixannee" class="formcours" name="annee" action="#" style="display:inline;">';
-echo '<select name="annee" style="display:inline; width:100px;">';
-$anneecivile = date('Y', time());
-ig_formselectannee($annee);
-echo '</select>';
-echo '<input type="submit" value="OK" style="display:inline;width:40px;"/>';
-echo '</form>'."\n";
-?>
 </li>
 </ul>
-<?php
-
-?>

@@ -55,9 +55,10 @@ function json_importer_declarations_php() {
 	    }
 
 	    /* faire un nouveau minot */
-	    $q = "INSERT INTO minoterie_minot (id_departement, id_enseignant, login, prenom, nom)".
+	    $q = "INSERT INTO minoterie_minot (id_departement, id_enseignant, login, prenom, nom, email, statut, service)".
 		"VALUES (".$id_departement.", ".$id_enseignant.", ".$ligne["login"].
-		", ".$ligne["prenom"].", ".$ligne["nom"].");";
+		", ".$ligne["prenom"].", ".$ligne["nom"].", ".$ligne["email"].
+                ", ".$ligne["statut"].", ".$ligne["service"].");";
 	    if (!$link->query($q)) {
 		errmsg("erreur avec la requete :\n".$q."\n".$link->error);
 	    }

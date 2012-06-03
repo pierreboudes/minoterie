@@ -28,31 +28,14 @@ function microsecoffset() {
 
 microsecoffset(); /* armee */
 
-function postclean($s) {
-    global $link;
-    if (isset($_POST[$s])) {
-	$source = $_POST[$s];
-    } else if (isset($_GET[$s])) {
-	$source = $_GET[$s];
-    } else {
-	return NULL;
-    }
-    if(get_magic_quotes_gpc()) {
-	return trim(htmlspecialchars($link->real_escape_string(stripslashes($source)), ENT_QUOTES));
-    }
-    else {
-	return trim(htmlspecialchars($link->real_escape_string($source), ENT_QUOTES));
-    }
-}
-
 /** recupere une chaine passee en HTTP/GET ou POST
  */
 function getclean($s) {
     global $link;
-    if (isset($_POST[$s])) {
-	$source = $_POST[$s];
-    } else if (isset($_GET[$s])) {
+    if (isset($_GET[$s])) {
 	$source = $_GET[$s];
+    } else if (isset($_POST[$s])) {
+	$source = $_POST[$s];
     } else {
 	return NULL;
     }
@@ -64,14 +47,14 @@ function getclean($s) {
     }
 }
 
-/** recupere un nombre passee en HTTP/POST ou GET (ou une liste de nombres separes par des X)
+/** recupere un nombre passee en HTTP/GET ou POST (ou une liste de nombres separes par des X)
  */
 function getnumeric($s) {
     global $link;
-    if (isset($_POST[$s])) {
-	$source = $_POST[$s];
-    } else if (isset($_GET[$s])) {
+    if (isset($_GET[$s])) {
 	$source = $_GET[$s];
+    } else if (isset($_POST[$s])) {
+	$source = $_POST[$s];
     } else {
 	return NULL;
     }
@@ -83,14 +66,14 @@ function getnumeric($s) {
 }
 
 
-/** recupere une liste de nombres separes par des virgules passee en HTTP/POST ou GET
+/** recupere une liste de nombres separes par des virgules passee en HTTP/GET ou POST
  */
 function getlistnumeric($s) {
     global $link;
-    if (isset($_POST[$s])) {
-	$source = $_POST[$s];
-    } else if (isset($_GET[$s])) {
+    if (isset($_GET[$s])) {
 	$source = $_GET[$s];
+    } else if (isset($_POST[$s])) {
+	$source = $_POST[$s];
     } else {
 	return NULL;
     }
@@ -101,15 +84,15 @@ function getlistnumeric($s) {
     return $source;
 }
 
-/** recupere un tableau de tableau associatif passé par HTTP/POST en json
+/** recupere un tableau de tableau associatif passé par HTTP/GET ou POST en json
     et échappe les chaînes pour php, mysql et html.
  */
 function getjsonaofaa($s) {
     global $link;
-    if (isset($_POST[$s])) {
-	$source = $_POST[$s];
-    } else if (isset($_GET[$s])) {
+    if (isset($_GET[$s])) {
 	$source = $_GET[$s];
+    } else if (isset($_POST[$s])) {
+	$source = $_POST[$s];
     } else {
 	return NULL;
     }
@@ -127,7 +110,6 @@ function getjsonaofaa($s) {
     }
     return $o;
 }
-
 
 function cookieclean($s) {
     global $link;
@@ -156,7 +138,7 @@ function postnumclean($s) {
     return str_replace(',','.',str_replace(' ', '',postclean($s)));
 }
 
-function pain_log($message, $logname='pain') {
+function minoterie_log($message, $logname='minoterie') {
     global $user;
     /* vu qu'on écrit un fichier on ne veut pas de process appelant qui boucle... */
     static $compteur;
@@ -166,7 +148,7 @@ function pain_log($message, $logname='pain') {
     $message = preg_replace("/\n+/", " ", $message);
 //	$message = preg_replace("/\n*$/", "\n", $message);
     $message .= ' -- '.date("M d H:i:s").' '.$user['login']. "\n";
-    $logfile = dirname($_SERVER['SCRIPT_FILENAME'])."/painlogs/".$logname .'.log';
+    $logfile = dirname($_SERVER['SCRIPT_FILENAME'])."/minoterielogs/".$logname .'.log';
 /*	echo $logfile;
 		if (@is_readable($logfile)) echo "readable";
 */

@@ -20,13 +20,18 @@
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('authentication.php'); 
-$user = authentication();
+$user = weak_auth();
 $annee = annee_courante();
 require_once("inc_headers.php"); /* pour en-tete et pied de page */
-entete("gestion des enseignements et des services", "pain_index.js");
-require_once('utils.php');
-include("menu.php");
-include("inc_infobox.php");
+entete("déclaration des services", "minoterie_index.js");
+require_once("utils.php");
+
+echo '<div id="user" class="hiddenvalue">';
+echo '<span class="id">'.$user["id_enseignant"].'</span>';
+echo '<span class="su">'.$user["su"].'</span>';
+echo '<span class="id_departement">'.$user["id_departement"].'</span>';
+echo '</div>';
+
 
 echo '<div id="vuecourante"></div>';
 
