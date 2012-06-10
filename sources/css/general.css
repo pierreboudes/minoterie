@@ -289,8 +289,23 @@ table.tableformations {
 
 /* autres dimensions */
 table.categorie, table.super, table.vuetags, table.vuecollections {
-    width:879px;
-    max-width:879px;
+    width:620px;
+    max-width:620px;
+}
+
+div.buttonbox {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+/*    height: 50px; */
+    width: 100%;
+/*    background-color: #DFE6FF; */
+    background: url("custom-theme/images/ui-bg_gloss-wave_35_f6a828_500x100.png") repeat-x scroll 50% 50% #F6A828;
+    border-top: 2px solid #E78F08;
+    text-align: center;
+    padding: 20px;
+    margin: 0px;
+/*    border-top: 2px red solid; */
 }
 
 table.enseignants {

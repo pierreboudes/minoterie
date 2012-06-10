@@ -21,7 +21,7 @@
  */
 require_once('authentication.php'); 
 $user = authentication();
-$annee = annee_courante();
+$annee = "2011";
 
 require_once("inc_connect.php");
 require_once("utils.php");
@@ -32,7 +32,7 @@ retourne des données de type $readtype, prises dans la base, sélectionnées pa
 
 Les données sont éventuellement calculées par jointures et aggrégats. La sélection dépend soit de l'identifiant de l'entrée fourni par le contexte d'une requête HTTP/POST ou GET, ou bien d'un identifiant de groupe d'entrées ou bien de l'année courante. 
  */
-function json_get_php($readtype) {
+function json_get_php($annee, $readtype) {
     global $link;
     if ($readtype == "utilisateur") {
 	$type = "utilisateur";
@@ -41,7 +41,7 @@ function json_get_php($readtype) {
     } else if ($readtype == "departement") {
 	$type = "departement";
 	$npar = array();
-	$order = " ORDER BY nom_ departement ASC";
+	$order = " ORDER BY nom_departement ASC";
     } else if ($readtype == "minot") {
 	$type = "minot";
 	$npar = array("id_enseignant","id_departement");
@@ -57,22 +57,40 @@ function json_get_php($readtype) {
     } else if ($readtype == "declaration") {
 	$type = "declaration";
 	$par = "id_departement";
-	$id_par = getnumeric("id_parent");
-	if (NULL == $id_par) {
-	    errmsg("$par absent de la requete ou non numerique ($readtype)");
-	}
 	$requete = "SELECT 
                     \"$type\" as type,
-                    id_minot as id,
-                    SELECT max(minoterie_minot.modification) as modification_minot,
-                    minoterie_minot.*,
-                    t.*
-                    FROM minoterie_minot LEFT JOIN 
-                    (SELECT *, max(minoterie_annotation.modification) as modification_annotation
-                    FROM minoterie_annotation GROUP BY id_minot) as t
-                    ON minoterie_minot.id_minot = t.id_minot 
-                    WHERE id_departement = 3 
-                    GROUP BY id_enseignant";
+                    id_enseignant,
+                    u.nom,
+                    u.prenom,
+                    u.id_minot,
+                    u.id_minot as id,
+                    u.id_minot as id_declaration,
+                    u.modification as modification_minot,
+                    traitee,
+                    w.id_annotation,
+                    w.modification as modification_annotation
+                    FROM  ((SELECT id_enseignant, max(modification) as modification
+                                   FROM minoterie_minot  GROUP BY id_enseignant) as t 
+                           NATURAL JOIN (minoterie_minot as u))
+                      LEFT JOIN 
+                          ((SELECT id_minot, max(modification) as modification 
+                                   FROM minoterie_annotation GROUP BY id_minot) as v
+                           NATURAL JOIN (minoterie_annotation as w))
+                    ON u.id_minot = v.id_minot 
+                    WHERE 1 ";
+	if (isset($_GET["id_parent"]) || isset($_POST["id_parent"])) {
+	    $id_par = getnumeric("id_parent");
+	    if (NULL == $id_par) {
+		errmsg("$par absent de la requete ou non numerique ($readtype)");
+	    }
+	    $requete .= " AND id_departement = $id_par ";
+	} else 	if (isset($_GET["id"]) || isset($_POST["id"])) {
+	    $id = getnumeric("id");
+	    if (NULL == $id) {
+		errmsg("id absent de la requete ou non numerique ($readtype)");
+	    }
+	    $requete .= " AND u.id_minot = $id ";
+	}
     } else {
 	errmsg("erreur de script (type inconnu)");
     }
@@ -104,7 +122,7 @@ function json_get_php($readtype) {
 	   $requete .= $filtre.$order;
        }
        $resultat = $link->query($requete) 
-	   or die("Échec de la requête sur la table $type".$requete."\n".$link->error);
+	   or errmsg("Échec de la requête sur la table $type".$requete."\n".$link->error);
        $arr = array();
        while ($element = $resultat->fetch_object()) {
 	   $arr[] = $element;
@@ -115,12 +133,12 @@ function json_get_php($readtype) {
        if (!isset($requete)) {
 	   $requete = "SELECT \"$type\" AS type,
                       $id AS id,
-                      minoterie_$type.*,
+                      minoterie_$type.*
              FROM minoterie_$type 
              WHERE `id_$type` = $id ";
        }
        $resultat = $link->query($requete) 
-	   or die("Échec de la requête sur la table $type".$requete."\n".$link->error);
+	   or errmsg("Échec de la requête sur la table $type".$requete."\n".$link->error);
        $arr = array();
        while ($element = $resultat->fetch_object()) {
 	   $arr[] = $element;
@@ -131,7 +149,8 @@ function json_get_php($readtype) {
    }
 }
 
-if (isset($_GET["type"])) {
+
+if (isset($_GET["type"]) || isset($_POST["type"])) {
     $readtype = getclean("type");
     $out = json_get_php($annee, $readtype);
     print json_encode($out);

@@ -38,16 +38,17 @@ require_once('utils.php');
 function bkp_base($force = false) {
     $output = "";
     $dir = dirname($_SERVER["SCRIPT_FILENAME"]);
+    if (!@file_exists("$dir/../secret/minoteriebkp.sh")) return "pas de script de sauvegarde"; 
     $s = @stat($dir.'/bkp/void_bkp.txt');
     if  (time() > ($s[9] + 604800) || $force) /* weekly */
     {
 	@touch($dir.'/bkp/void_bkp.txt');
-	pain_log("-- backup base start");	
-	$output = shell_exec("$dir/../secret/painbkp.sh $dir");
+	minoterie_log("-- backup base start");	
+	$output = shell_exec("$dir/../secret/minoteriebkp.sh $dir");
 	if (0 == strlen($output)) {
-	   pain_log("-- Warning: backup problem (no script output)");
+	   minoterie_log("-- Warning: backup problem (no script output)");
 	}
-	pain_log("-- backup base end");
+	minoterie_log("-- backup base end");
     }
     return $output;
 }

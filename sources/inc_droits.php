@@ -23,6 +23,8 @@
 /* gestion des droits (temporaire) */
 require_once('authentication.php'); 
 authrequired();
+$user = weak_auth();
+$login = phpCAS::getUser(); 
 
 function peuttoutfaire() {
     global $user;
@@ -38,8 +40,8 @@ function peutimporterdeclarations($id_departement) {
 
 function peutediter($type, $id, $id_parent) {
     if ($id != NULL) {
-	if ($type == "sformation") return peuteditersformation($id);
-	if ($type == "formation") return peutediterformation($id);
+	if ($type == "annotation") return peutediterannotation($id, NULL);
+	if ($type == "minot") return peutediterminot($id);
 	if ($type == "cours") return peuteditercours($id);
 	if ($type == "tranche") return peuteditertranche($id);
 	if ($type == "enseignant") return peutediterenseignant($id);
@@ -49,7 +51,7 @@ function peutediter($type, $id, $id_parent) {
 	if ($type == "collection") return peuteditercollection($id);
     }
     if ($id_parent != NULL) {
-	if ($type == "sformation") return peuteditersformationdelannee($id_parent);
+	if ($type == "annotation") return peutediterannotation(NULL,$id_parent);
 	if ($type == "formation") return peutediterformationdelasformation($id_parent);
 	if ($type == "cours") return peuteditercoursdelaformation($id_parent);
 	if ($type == "tranche") return peuteditertrancheducours($id_parent);
@@ -61,6 +63,33 @@ function peutediter($type, $id, $id_parent) {
 	if ($type == "collectionscours") return peuteditercours($id_parent);
     }
     if ($type == "enseignant") return peutproposerenseignant();
+    return false;
+}
+
+function peutediterminot($id) {
+    return peuttoutfaire();
+}
+
+function peutediterannotation($id, $id_parent) {
+    global $link;
+    global $login;
+    global $user;
+    if ($user["su"]) return true;
+    if ( (NULL == $id) && (NULL == $id_parent) ) return false;
+    if ( NULL != $id_parent) {
+	$query = "SELECT login FROM minoterie_minot 
+                  WHERE id_minot = $id_parent AND login = '$login'";
+    }
+    else if ( NULL != $id) {
+	$query = "SELECT login FROM minoterie_annotation, minoterie_minot 
+                  WHERE id_annotation = $id 
+                  AND minoterie_annotation.id_minot = minoterie_minot.id_minot 
+                  AND login = '$login'";
+    }
+    $res = $link->query($query) or die("ERREUR peutediterannotation($id_formation): $query");
+    if ($r = $res->fetch_array()) {
+	return true;
+    }
     return false;
 }
 

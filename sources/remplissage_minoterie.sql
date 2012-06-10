@@ -11,4 +11,4 @@ VALUES (4, 'physique', 'http://servens-galilee.univ-paris13.fr/physique/pain/');
 INSERT INTO `minoterie_departement` (`id_departement`, `nom_departement`, `url_pain`) 
 VALUES (5, 'un testeur', 'http://localhost:8888/mathpain/');
 
-INSERT INTO `minoterie_utilisateur` (`login`, `id_departement`, `su`) VALUES ('boudes', 2, 1);
+INSERT INTO `minoterie_utilisateur` (`login`,`prenom`, `nom`, `id_departement`, `su`) VALUES ('boudes', 'Pierre', 'Boudes', 2, 1);

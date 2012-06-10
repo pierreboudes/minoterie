@@ -24,6 +24,13 @@
 var hasTouch = false;
 var clickeditmode = false;
 
+function geturlpain() {
+    return $('#user').find('.url_pain').text();
+}
+function getid_departement() {
+    return $('#user').find('.id_departement').text();
+}
+
 $(document).ready(function(){
 	var agent = navigator.userAgent.toLowerCase();
 	if(agent.indexOf('iphone') >= 0 
@@ -328,7 +335,7 @@ function sunumcell () {
 }
 sunumcell.prototype = new numcell();
 
-/* constructeur de cellule num modifiable uniquement par super-user */
+/* constructeur de cellule check modifiable uniquement par super-user */
 function sucheckcell () {
     this.mutable = superuser(); /* valeur calculee au demarrage */
     this.showmutable = function (c) {
@@ -341,6 +348,14 @@ function sucheckcell () {
 }
 sucheckcell.prototype = new checkcell();
 
+/* constructeur de cellule check non modifiable */
+function immutcheckcell () {
+    this.mutable = false;
+    this.showmutable = function (c) {
+    }
+}
+immutcheckcell.prototype = new checkcell();
+
 
 /* constructeur de cellule non modifiable et sans valeur */
 function notcell () {
@@ -349,65 +364,95 @@ function notcell () {
 }
 notcell.prototype = new immutcell();
 
+function immutmodifcell () {
+    this.setval = function (c, o) {
+	var type = this.name;
+	if ((o["modification_"+type] != undefined) && (o["modification_"+type] != null)) {
+	    c.html("<div class=\"yes\"><a href=\"index.php?type="+type+"&id="+
+                    o["id_"+type]+"\">"+o["modification_"+type]+"</a></div>");
+	}
+	else {
+	    c.html("<div class=\"yesno no\">non</div>");
+	}
+    };
+}
+immutmodifcell.prototype = new immutcell();
+
+/* constructeur de cellule colorée immut */
+function colorcell() {
+    this.colorlist = ['red', 'transparent'];
+    this.setval = function (c, o) {
+	c.removeClass("edit");
+	var val = "";
+	if (o[this.name] != undefined) val = o[this.name];
+	c.html(val+'<div class="hiddenvalue">transparent</div>');
+	var clist = this.colorlist;
+	c.bind('click', function () {
+	    var i;
+	    var l = clist;
+	    var n = l.length;
+	    var d = c.find(".hiddenvalue");
+	    var curr = d.text();
+	    for (i = 0; i < n; ++i) {
+		if (curr == l[i]) {
+		    ++i;
+		    break;
+		}
+	    }
+	    curr = l[i % n];
+	    d.text(curr);
+	    c.css('background-color',curr);
+	});
+    }
+}
+colorcell.prototype = new immutcell();
+
+/* constructeur de non-cellule coloriant la ligne */
+function colorlinecell() {
+    this.colorlist = ['lightgreen', 'pink', 'transparent'];
+    this.colorlistlegende = ['ligne conservée', 'nouvelle ligne', 'ligne à annoter'];
+    this.setval = function (c, o) {
+	c.removeClass("edit");
+	c.html('<span class="colorlinelegende">ligne à annoter</span><div class="hiddenvalue">transparent</div>');
+	var clist = this.colorlist;
+	var llist = this.colorlistlegende;
+	c.bind('click', function () {
+	    var i;
+	    var l = clist;
+	    var legende = llist;
+	    var n = l.length;
+	    var d = c.find(".hiddenvalue");
+	    var leg = c.find(".colorlinelegende");
+	    var tr = c.parent('tr');
+	    var curr = d.text();
+	    for (i = 0; i < n; ++i) {
+		if (curr == l[i]) {
+		    ++i;
+		    break;
+		}
+	    }
+	    curr = l[i % n];
+	    d.text(curr);
+	    leg.text(legende[i % n]);
+	    tr.css('background-color',curr);
+	});
+    }
+}
+colorlinecell.prototype = new immutcell();
+
+
+
+
+
 /* constructeur du composite enseignant */
 function enseignant () {
     this.name = "enseignant";
-    this.mutable = true;
-    this.edit = function (c) {
-	/* sauvegarder l'id actuel */
-	var ensid = c.find('.hiddenvalue').text(); 
-	// TODO refaire avec value au lien de span hidden
-	c.remove('.hiddenvalue');
-	var ensname = $.trim(c.find('a').text());
-	/* installer la zone d'input */
-	c.html('<input type="text" value="'+ensname+'"/><span class="hiddenvalue">'+ensid+'</span>');
-	/* charger une seule fois la liste des enseignants */	
-	/* mettre en place l'autocomplete */
-	var ens = c.find("input");
-	getjson("json_enseignants.php",{term: ""}, function (data) {
-		ens.autocomplete({ minLength: 2,
-			    source: data,
-/* USELESS (FAIL)			    mustMatch: true,
-			    selectFirst: true,
-			    autoFill: true,
-			    change: function (event, ui) {
-			    //if the value of the textbox does not match a suggestion, clear its value
-			    if ($(".ui-autocomplete li:textEquals('" + $(this).val() + "')").size() == 0) {
-				$(this).val('');
-			    }
-			}
-		    }).live('keydown', function (e) {
-			    var keyCode = e.keyCode || e.which;
-			    //if TAB or RETURN is pressed and the text in the textbox does not match a suggestion, set the value of the textbox to the text of the first suggestion
-			    if((keyCode == 9 || keyCode == 13) && ($(".ui-autocomplete li:textEquals('" + $(this).val() + "')").size() == 0)) {
-				$(this).val($(".ui-autocomplete li:visible:first").text());
-			    }
-*/
-			    select: function(e, ui) {
-			    if (!ui.item) {
-				// remove invalid value, as it didn't match anything
-				$(this).val("");
-				return false;
-			    }
-			    $(this).focus();
-			    ens.val(ui.item.label);
-			    c.find('.hiddenvalue').html(ui.item.id);
-			} 
-		    })});
-	c.addClass("edit");
-	c.find('input').focus();
-    };
-    this.getval = function (c,o) {
-	var ensid = c.find('.hiddenvalue').text();
-//	var ensid = c.find('input').autocomplete( "widget" ).item.id;
-	o["id_enseignant"] = ensid;
-    }
     this.setval = function (c,o) {
-	c.html('<a class="enseignant" href="service.php?id_enseignant='+o["id_enseignant"]+'">'+o["prenom_enseignant"]+" "+o["nom_enseignant"]+'</a><span class="hiddenvalue">'+o["id_enseignant"]+'</span>');
-	c.find("a.enseignant").click(function(){window.open(this.href);return false;});
+	c.html(o["prenom"]+" "+o["nom"]);
+/*	c.find("a.enseignant").click(function(){window.open(this.href);return false;}); */
     }
 }
-enseignant.prototype = new cell();
+enseignant.prototype = new immutcell();
 
 /* constructeur du composite sformation */
 function microsformation () {
@@ -1013,21 +1058,9 @@ function ligne() {
     /* prenom */
     this.prenom = new cell();
     this.prenom.name = "prenom";
-    /* statut */
-    this.statut = new cell();
-    this.statut.name = "statut";
-    /* email */
-    this.email = new cell();
-    this.email.name = "email";
     /* telephone */
     this.telephone = new cell();
     this.telephone.name = "telephone";
-    /* bureau */
-    this.email = new cell();
-    this.email.name = "email";
-    /* service statutaire */
-    this.service = new sunumcell();
-    this.service.name = "service";
     /* service reel */
     this.service_reel = new service_reel();
     /* composite : categorie */
@@ -1195,6 +1228,53 @@ function ligne() {
     /* nb_cours */
     this.nb_cours = new immutcell();
     this.nb_cours.name = "nb_cours";
+    /* minoterie */
+    this.nom_long = new immutcell();
+    this.nom_long.name = "nom_long";
+    this.label = new immutcell();
+    this.label.name = "label";
+    this.declaration = new immutmodifcell();
+    this.declaration.name = "minot";
+    this.annotation = new immutmodifcell();
+    this.annotation.name = "annotation";
+    this.traitee = new sucheckcell();
+    this.traitee.name = "traitee";
+    this.selection = new checkcell();
+    this.selection.name = "selection";
+    this.color_line = new colorlinecell();
+    this.color_cm = new colorcell();
+    this.color_cm.name = "cm";
+    this.color_td = new colorcell();
+    this.color_td.name = "td";
+    this.color_tp = new colorcell();
+    this.color_tp.name = "tp";
+    this.color_alt = new colorcell();
+    this.color_alt.name = "tp";
+    this.nom_cours = new immutcell();
+    this.nom_cours.name = "nom_cours";
+    this.nom_formation = new immutcell();
+    this.nom_formation.name = "nom_formation";
+    this.color_code_geisha = new colorcell();
+    this.color_code_geisha.name = "code_geisha";
+    this.color_semestre = new colorcell();
+    this.color_semestre.name = "semestre";
+    this.nom_departement = new immutcell();
+    this.nom_departement.name = "nom_departement";
+    this.enseignant = new enseignant();
+    this.derniere_declaration = new immutcell();
+    this.derniere_declaration.name = "modification_minot";
+    this.derniere_annotation = new immutcell();
+    this.derniere_annotation.name = "modification_annotation";
+    /* statut */
+    this.statut = new immutcell();
+    this.statut.name = "statut";
+    /* email */
+    this.email = new immutcell();
+    this.email.name = "email";
+    /* service statutaire */
+    this.service = new immutcell();
+    this.service.name = "service";
+
 }
 /*--------  FIN OBJET LIGNE --------------*/
 
@@ -1261,27 +1341,40 @@ function idString(o) {
 
 /* Pour envoyer et recevoir au format json */
 function getjson(url,data,callback) {
-    $.ajax({ type: "GET",
-		url: url,
-		data:  data,
-		datatype: 'json',
-		error: function () {alert('erreur ajax ! [url: '+url+'] [data: '+data+']');},
-		success: function(data) {
-		var o;
-		try {
+    var httptype = "GET";
+    var datatype = "json";
+
+    if (data.httptype != undefined) {
+	httptype = data.httptype;
+	delete data.httptype;
+    }
+    if (data.datatype != undefined) {
+	datatype = data.datatype;
+	delete data.datatype;
+    }
+    $.ajax({ type: httptype,
+	     url: url,
+	     data:  data,
+	     datatype: datatype,
+	     error: function () {alert('erreur ajax ! [url: '+url+'] [data: '+data+']');},
+	     success: function(data) {
+		 var o;
+		 try {
 		    o = jQuery.parseJSON(data);
-		    if (o.error != null) {
-			// if (confirm()) ...
-			alert(o.error);
-			return;
-		    }
-		} catch (e) {
-		    alert("Erreur: "+e+" vous avez peut être été déconnecté du CAS, rechargez la page.\n"+data);
-		    return;
-		}
-		callback(o);
-	    }
-	});
+		     if (o.error != null) {
+			 alert(o.error);
+			 return;
+		     }
+		 } catch (e) {
+		     alert("Erreur: "
+			   +e
+			   +" vous avez peut être été déconnecté du CAS, rechargez la page.\n"
+			   +$.toJSON(data));
+		     return;
+		 }
+		 callback(o);
+	     }
+	   });
 }
 
 /* la meme version debug */
@@ -1295,7 +1388,6 @@ function getjsondb(url,data,callback) {
 		alert("RECEIVED: " + data); 
 		o = jQuery.parseJSON(data);
 		if (o.error != null) {
-		    // if (confirm()) ...
 		    alert(o.error);
 		} else {
 		    callback(o);
@@ -1392,6 +1484,390 @@ function basculerAide() {
 }
 
 /* bloc --- Les bascules --- */
+
+function ajouterTableCategories(jq) {
+    var url = geturlpain()+"json_categories.php";
+    jq.append('<table class="categorie" id="tablecat0"><tbody></tbody></table>');
+    appendList({type: "categorie", id_parent: 0, url: url, term: ""}, 
+	       $('#tablecat0 > tbody'), function(o){
+		   var n = o.length;
+		   var i = 0;
+		   for (i = 0; i < n; ++i) {
+		       var id = o[i]["id"];
+		       var action = $("#categorie_"+id+"> td.laction");
+		       action.prepend('<div class="basculeOff" id="basculecat_'+id+'" />').bind('click',{id: id},basculerCategorie);
+		   }
+	       });
+}
+
+function ajouterBoutonsImportation(jq) {
+    var buttonbox = jQuery('<div class="buttonbox"></div>');
+    var transfert = jQuery('<button class="transfert">Importer les déclarations sélectionnées</button>');
+    transfert.button({
+	text: true,
+		icons: {
+	    primary: "ui-icon-transferthick-e-w" 
+		    }
+	});
+    transfert.bind("click", importerDeclarationSel);
+    buttonbox.append(transfert);
+    jq.append(buttonbox);
+    $('#skel').append('<div id="dialog_importer"></div>');
+    $('#dialog_importer').dialog({autoOpen: false, 
+				  draggable: true, 
+				  resizable: true,
+				  modal: true,
+				  width: 700,
+				  height: 300,
+				 buttons: {
+				     "Importer": function() {
+					 var ids = $('#dialog_importer').find('div.hiddenvalue').text();
+					 /* barre de progression */
+					 $('#dialog_importer').html("importation en cours"+
+                                          "<div id=\"importer_progbar\"></div>");				
+					 $( "#importer_progbar" ).progressbar({
+					     value: 10
+					 });
+					 var data = {					     
+					     annee: getAnnee(),
+					     type: "declarations",
+					     id_departement: getid_departement(),
+					     ids: ids
+					 }
+					 var url = geturlpain()+"json_get.php";
+					 $( "#importer_progbar" ).progressbar({
+					     value: 33
+					 });
+					 /* recuperation des donnees */
+					 getjson(url, data, function (o) {
+					     $( "#importer_progbar" ).progressbar({
+						 value: 67
+					     });
+					     var data = { 
+						 httptype: "POST",
+						 interventions: $.toJSON(o),
+						 id_departement: getid_departement(),
+					     }
+					     /* envoie des donnees */
+					     getjson("json_importer_declations.php", data, function (o) {
+						 $( "#importer_progbar" ).progressbar({
+						     value: 100
+						 });
+						 $('#dialog_importer').effect('highlight',{},1000, function () {
+						     $('#dialog_importer').dialog("close");
+						     $('#vuecourante  tr.categorie > td.laction > div.basculeOn')
+							 .trigger('click');
+						     /* ici, rafraichir les données internes sur les declarations ! */
+						 });
+					     });
+					 });
+				     },
+				     Cancel: function() {
+					 $(this).dialog("close");
+				     }
+				 },
+				  title: "Confirmer l'importation"
+				 });
+
+}
+
+function importerDeclarationSel(e) {
+    var table = $('#vuecourante').find('table');
+    var ids = new Array();
+    var n = 0;
+    var ndecl = 0;
+    var nannot = 0;
+    var ntrait = 0;
+    var noms = new Array();
+    /* lecture de la selection */
+    table.find('td.selection >div.yes').each(function () {
+	var ligne = $(this).closest('tr');
+	var nom;
+	var css = new Array();
+	n += 1;
+	css.push('label');
+	ids.push(parseIdString(ligne.attr('id')).id);
+	nom = ligne.find('td.label').text();
+	if (existsjQuery(ligne.find('td.declaration > div.yes'))) {
+	    css.push('declaration');
+	    ndecl += 1;
+	}
+	if (existsjQuery(ligne.find('td.annotee > div.yes'))) {
+	    css.push('annotee');
+	    nannot += 1;
+	}
+	if (existsjQuery(ligne.find('td.traitee > div.yes'))) {
+	    css.push('traitee');
+	    ntrait += 1;
+	}
+	noms.push('<span class="'+css.join(' ')+'">'+nom+'</span>');
+	return true;
+    });
+    if (n < 1) {
+	alert("Sélection vide");
+	return false;
+    }
+    /* message utilisateur */
+    var msg = "<p>Voulez-vous vraiment importer les déclarations des personnes suivantes ?</p>";
+    if (0 < ntrait + nannot + ndecl) {
+	msg += "<idv class=\"dialog_alert\"><b>Attention certaines déclarations existent déjà dans la minoterie et seront remplacées par votre nouvelle importation :</b> <ul>";
+	if (1 == ndecl) msg += '<li>'+ndecl+' personne a déjà une <span class="declaration">déclaration émise</span></li>';
+	if (1 < ndecl) msg += '<li>'+ndecl+' personnes ont déjà une <span class="declaration">déclaration émise</span></li>';
+	if (1 == nannot) msg += '<li> '+nannot+' de ces déclarations est <span class="declaration">annotée</span></li>';
+	if (1 < nannot) msg += '<li> '+nannot+' de ces déclarations sont <span class="declaration">annotées</span></li>';
+	if (1 == ntrait) msg += '<li>'+ntrait+' de ces déclarations a <span class="declaration">été traitée</span></li>';
+	if (1 < ntrait) msg += '<li>'+ntrait+' de ces déclarations ont <span class="declaration">été traitées</span></li>';
+	msg += '</ul></div>';
+    }
+    msg += '<p>Voici la liste des personnes dont vous souhaitez importer la déclaration : '+noms.join(', ')
+            +'.</p><div class="hiddenvalue">'+ids.join(',')+'</div>';
+    $('#dialog_importer').html(msg);
+    $('#dialog_importer').dialog('open');
+    return false;
+}
+
+function basculerCategorie(e) {
+    var id = e.data.id;
+    var sid = idString({id: id, type: "categorie"});
+    var bascule =  $('#basculecat_'+id);
+    bascule.toggleClass('basculeOff');
+    bascule.toggleClass('basculeOn');
+    if (bascule.hasClass('basculeOff')) {
+	$('#tableenscat_'+id).remove();
+	$('#trtableenscat'+id).remove();
+    } else {
+	var url = geturlpain()+"json_enseignants.php";
+	var annee = getAnnee();
+	var colspan = largeurligne(bascule);
+	$('#categorie_'+id).effect('highlight',{},800,function () {});	   
+	$('#categorie_'+id).after('<tr class="conteneur" id="trtableenscat'+id+'"><td class="conteneur" colspan="'+colspan+'"><table class="enseignant" id="tableenscat_'+id+'"><tbody></tbody></table></td></tr>');
+	/* recuperer les listes de declarations deja transmise */
+	getjson("json_get.php",{type: "declaration", id_parent: getid_departement()},
+		function (d) {
+		    var merge_ens_minot = function (o)  {
+			//alert(" o = "+$.toJSON(o) + " d = "+$.toJSON(d));
+			o = left_join_aa(o,d,"id_enseignant");
+			return o;
+		    };
+		    /* charger les enseignants de la categorie et y ajouter les infos sur les declarations */
+		    appendList({type: "enseignant",
+				id_parent: id,
+				categorie: id, 
+				term:"", 
+				url: url, 
+				annee: annee,
+				prepare_data: merge_ens_minot,
+			       },
+		   $('#tableenscat_'+id+' > tbody'), 
+			       function(){	
+		       $('#tableenscat_'+id+' tr.enseignant').fadeIn("slow");
+			       });
+		});
+    }
+    return false;
+}
+
+function basculerMinot(e, boutons_annot, traitee) {
+    var id;
+    var type="minot";
+    var boutons = false;
+    if ((e.data != undefined) && (e.data.id != undefined)) {
+	id = e.data.id;
+	type = e.data.type;
+	if (e.data.boutons != undefined) {
+	    boutons = e.data.boutons;
+	}
+    } else {
+	id = e;
+	if (boutons_annot != undefined) {
+	    boutons = boutons_annot;
+	}
+    }
+    var sid = idString({id: id, type: type});
+    var bascule =  $('#basculeminot_'+id);
+    bascule.toggleClass('basculeOff');
+    bascule.toggleClass('basculeOn');
+    if (bascule.hasClass('basculeOff')) {
+	$('#tableinterventions_'+id).remove();
+	$('#trtableinterventions'+id).remove();
+	$('#trcommentaireinterventions'+id).remove();
+	$('#trbuttonbox'+id).remove();
+	return false;
+    }
+    var colspan = largeurligne(bascule);
+    $('#'+sid).effect('highlight',{},800,function () {});	   
+    $('#'+sid).after('<tr class="conteneur" id="trtableinterventions'+id+'"><td class="conteneur" colspan="'+colspan+'"><table class="interventions" id="tableinterventions_'+id+'"><tbody></tbody></table></td></tr>');
+    /* charger les interventions */
+    appendList({type: "intervention",
+		id_parent: id
+	       },
+	       $('#tableinterventions_'+id+' > tbody'), 
+	       function(){	
+		   $('#tableinterventions_'+id+' tr.intervention').fadeIn("slow");
+	       
+		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
+		   var trcommentaire = jQuery('<tr id="trcommentaireinterventions'+id+'"><td colspan='+colspan+' class="commentaire_annotation"><div class="titre_annotation">Commentaires :</div><textarea id="commentaireannot_'+id+'"></textarea><div id="derniere_annot'+id+'" class="titre_annotation">Aucune annotation enregistrée pour cette déclaration</div></td></tr>');
+		   $('#trtableinterventions'+id).after(trbuttonbox).after(trcommentaire);
+		   var buttonbox = $('#buttonboxannot_'+id);		 
+		   if (boutons && !traitee) {
+		       var enregistrer = jQuery('<button class="enregistrerannotation">Enregistrer les annotations</button>');
+		       enregistrer.button({
+			   text: true,
+			   icons: {
+			       primary: "ui-icon-transferthick-e-w" 
+			   }
+		       });
+		       enregistrer.bind("click", {id: id}, enregistrerAnnotation);
+		       buttonbox.append(enregistrer);
+		   }
+		   if (boutons && traitee) {
+		   }
+		   /* charger les annotations */
+		   getjson("json_get.php", {type: "annotation", id_parent: id}, function (o) {
+		       if (0 < o.length) {
+			   appliquerAnnotation(id, o[0]);	   
+		       }
+		       return false;
+		   });
+	       });
+    return false;
+}
+
+function basculerDepartement(e) {
+    var id = e.data.id;
+    var sid = idString({id: id, type: "departement"});
+    var bascule =  $('#basculedepartement_'+id);
+    bascule.toggleClass('basculeOff');
+    bascule.toggleClass('basculeOn');
+    if (bascule.hasClass('basculeOff')) {
+	$('#tabledeclarations_'+id).remove();
+	$('#trtabledeclarations'+id).remove();
+	return false;
+    }
+    var colspan = largeurligne(bascule);
+    $('#departement_'+id).effect('highlight',{},800,function () {});	   
+    $('#departement_'+id).after('<tr class="conteneur" id="trtabledeclarations'+id+'"><td class="conteneur" colspan="'+colspan+'"><table class="declarations" id="tabledeclarations_'+id+'"><tbody></tbody></table></td></tr>');
+    /* charger les interventions */
+    appendList({type: "declaration",
+		id_parent: id
+	       },
+	       $('#tabledeclarations_'+id+' > tbody'), 
+	       function(){	
+		   $('#tabledeclarations_'+id+' tr.declaration').fadeIn("slow");
+	       });
+    return false;
+}
+
+
+function enregistrerAnnotation(e) {
+    var id = e.data.id;
+    var a = collecterAnnotation(id);
+    var url = "json_new.php";
+    a.type = "annotation";
+    a.id_parent = id;
+    a.httptype = "POST";
+    var id_annotation = $('#derniere_annot'+id+' > div.hiddenvalue').text();
+    if (0 < id_annotation) {
+	url = "json_modify.php";
+	a.id = id_annotation;
+    }
+    getjson(url, a, function(o) {
+	/* changer la date et l'id de la dernière declaration */
+	appliquerAnnotation(id, o[0]);
+	//alert($.toJSON(o));
+    });
+}
+function collecterAnnotation(id) {
+/*    var table = $('tableinterventions_'+id); */
+    var lignes = $('#legendeintervention'+id).siblings();
+    var t = Array();
+    lignes.each(function (i, d) {
+	var idtr = parseIdString($(this).attr('id')).id;
+	var color = $(this).find('td.color_line > div.hiddenvalue').text();
+	var texte = $(this).find('td.color_line > span.colorlinelegende').text();
+	var color_semestre = $(this).find('td.color_semestre > div.hiddenvalue').text();
+	var color_cm = $(this).find('td.color_cm > div.hiddenvalue').text();
+	var color_td = $(this).find('td.color_td > div.hiddenvalue').text();
+	var color_tp = $(this).find('td.color_tp > div.hiddenvalue').text();
+	var color_alt = $(this).find('td.color_alt > div.hiddenvalue').text();
+	var color_code = $(this).find('td.color_code_geisha > div.hiddenvalue').text();
+	t.push({id_intervention: idtr, 
+		color_intervention: color,
+		ligne_texte: texte,
+		color_cm: color_cm,
+		color_td: color_td,
+		color_tp: color_tp,
+		color_alt: color_alt,
+		color_semestre: color_semestre,
+		color_code: color_code
+	       });
+	return true;
+    });
+    var s = $('#commentaireannot_'+id).val();
+    var o = {id_minot: id, commentaire: s};
+    o.jsannot = $.toJSON(t);
+    return o;
+}
+
+function appliquerAnnotation(id, o) {
+    $('#derniere_annot'+id).html('Dernières annotations de la déclaration: '
+				 +o['modification']+'<div class="hiddenvalue">'+o['id_annotation']+'</div>');
+    $('#commentaireannot_'+id).val(o.commentaire);
+    /* o.jsannot a vu ses quotes echappés en html, on trafique un truc pour y remédier */
+    $('#commentaireannot_'+id).after('<div id="tempannot'+id+'" class="hiddenvalue">'+o.jsannot+'</div>');
+    var jsannot = $('#tempannot'+id).text();
+    var a = $.secureEvalJSON(jsannot);
+    $('#tempannot'+id).remove();
+    var n = a.length;
+    var i;
+    /* application des annotations ligne a ligne */
+    for (i = 0; i < n; ++i) {
+	var ligne = a[i];
+	var tr = $('#intervention_'+ligne['id_intervention']);
+	tr.css('background-color', ligne['color_intervention']);
+	tr.find('td.color_line > span.colorlinelegende').text(ligne['ligne_texte']);
+        tr.find('td.color_line > div.hiddenvalue').text(ligne['color_intervention']);
+	tr.find('td.color_cm').css('background-color', ligne['color_cm']);
+        tr.find('td.color_cm > div.hiddenvalue').text(ligne['color_cm']);
+	tr.find('td.color_td').css('background-color', ligne['color_td']);
+        tr.find('td.color_td > div.hiddenvalue').text(ligne['color_td']);
+	tr.find('td.color_tp').css('background-color', ligne['color_tp']);
+        tr.find('td.color_tp > div.hiddenvalue').text(ligne['color_tp']);
+	tr.find('td.color_alt').css('background-color', ligne['color_alt']);
+        tr.find('td.color_alt > div.hiddenvalue').text(ligne['color_alt']);
+	tr.find('td.color_semestre').css('background-color', ligne['color_semestre']);
+        tr.find('td.color_semestre > div.hiddenvalue').text(ligne['color_semestre']);
+	tr.find('td.color_code_geisha').css('background-color', ligne['color_code']);
+        tr.find('td.color_code_geisha > div.hiddenvalue').text(ligne['color_code']);
+    }
+}
+
+
+function left_join_aa(o,d,colonne) {
+    var i = 0;
+    var j = 0;
+    var n = o.length;
+    var m = d.length;
+    var pivot;
+    for (i = 0; i < n; ++i) {
+	pivot = o[i][colonne];
+	j = 0;
+	while ((j < m) && (pivot != d[j][colonne])) {
+	    j = j + 1;
+	}
+	if ((j < m) && (pivot == d[j][colonne])) {
+	    /* coller les colonnes de d != colonne dans o */
+	    var k;
+	    for (k in d[j]) {
+		if (o[i][k] == undefined) {
+		    o[i][k] = d[j][k];
+		}
+	    }
+	}
+    }
+    return o;
+}
+
 function basculerAnnee(e) {
     var id;
     if ((e.data != undefined) && (e.data.id != undefined)) {
@@ -1527,29 +2003,6 @@ function basculerChoix(e) {
    return false;
 }
 
-function basculerCategorie(e) {
-    var id = parseIdString($(this).attr('id')).id;
-    var bascule =  $('#basculeCat_'+id);
-    bascule.toggleClass('basculeOff');
-    bascule.toggleClass('basculeOn');
-    if (bascule.hasClass('basculeOn')) {
-	$('#'+idString({id: id, type: "tablecat"}))
-	    .append('<tr id="trtableens_'+id+'"><td class="nopadding" colspan="3"><table id="tableens_'+id+'" class="enseignants"><tbody></tbody></table>');
-	appendList({type: "enseignant", id_parent: id},
-		   $('#tableens_'+id+'> tbody'),
-		   function () {		       
-		       var legende = $('#legendeenseignant'+id);
-		       addMenuFields(legende);
-		       addAdd(legende.find('th.action'));
-/*                     $('#tableens_'+id+'> tbody').prepend(<thead></thead>);
-		       $('#tableens_'+id+'> thead').append(legende);
-		       $('#tableens_'+id).tablesorter(); */
-		   });
-    } else {
-	$("#trtableens_"+id).fadeOut(500).remove();
-    }
-    return false;
-}
 
 function basculerEnseignant(e) {
     var id = e.data.id;
@@ -2120,7 +2573,7 @@ function   nouveauService(e) {
 /* ---------- FIN MENU AJOUT SERVICE ---------*/
 
 function getAnnee() {
-    return $('#choixannee option:selected').attr('value');
+    return $('#annee').text();
 }
 
 /* ---------- PANIER -------------*/
@@ -2243,20 +2696,30 @@ function recalculatePanier(type) {
 function appendList(data, body, do_it_last) {
     var legende = $("#skel"+data.type);
     var list = legende.children('th');
+    var url = "json_get.php";
+    var prepare_data = function (o) {return o;};
     legende.clone(true).attr('id','legende'+data.type+data.id_parent).appendTo(body);
     legende = $('#legende'+data.type+data.id_parent);
-    getjson("json_get.php",data, function (o) {
-	    var n = o.length;
-	    var i = 0;
-	    for (i = n - 1; i >= 0; i--) {
-		appendItem(data.type,legende,o[i],list);
-	    }
-	    if (do_it_last != undefined) {// comment tester si fonction ?
-		do_it_last(o); 
-	    }
-	});
+    if (data.url != undefined) {
+	url = data.url;
+	delete data.url;
+    }
+    if (data.prepare_data != undefined) {
+	prepare_data = data.prepare_data;
+	delete data.prepare_data;
+    }
+    getjson(url, data, function (o) {
+	    o = prepare_data(o);
+	var n = o.length;
+	var i = 0;
+	for (i = n - 1; i >= 0; i--) {
+	    appendItem(data.type,legende,o[i],list);
+	}
+	if (do_it_last != undefined) {// comment tester si fonction ?
+	    do_it_last(o); 
+	}
+    });
 }
-
 
 function appendItem(type, prev, o, list) {
     var n = list.length;
@@ -2289,62 +2752,16 @@ function appendItem(type, prev, o, list) {
 	    cell.fadeOut(0);
 	}
     }
-    if (type == "cours") {
+    if (type == "declaration") {
 	line.children('td.laction')
-	    .prepend('<div class="basculeOff" id="basculecours_'+o["id_cours"]+'" />')
-	    .bind('click',{id: o["id_cours"]},basculerCours);
-	addHandle(line.children('td.laction'), "cours");
-	var colspan = largeurligne($("#skelcours"));
-	line.before('<tr class="imgcours"><td class="imgcours" colspan="'+colspan+'"><div id="imgcours'+o["id_cours"]+'" class="imgcours"></div></td></tr>');
+	    .prepend('<div class="basculeOff" id="basculeminot_'+o["id_minot"]+'" />')
+	    .bind('click',{id: o["id_minot"], type: "declaration"},basculerMinot);
     }
-    if (type == "annee") {
-	var idannee = o["id"];
-	/* bascule d'annee */
+    if (type == "departement") {
 	line.children('td.laction')
-	    .prepend('<div class="basculeOff" id="basculeannee'+idannee+'" />');
-	$('#basculeannee'+idannee).bind('click',{id: idannee},basculerAnnee);
-	addHandle(line.children('td.laction'), "annee");
-	$('#basculeannee'+idannee).droppable({accept:'div.handle', drop: dropLine, activeClass: '.ui-state-highlight',tolerance:'touch'});
+	    .prepend('<div class="basculeOff" id="basculedepartement_'+o["id_departement"]+'" />')
+	    .bind('click',{id: o["id_departement"]},basculerDepartement);
     }
-    if (type == "sformation") {
-	var idsf = o["id_sformation"];
-	/* bascule de sformation */
-	line.children('td.laction')
-	    .prepend('<div class="basculeOff" id="basculesformation_'+idsf+'" />');
-	$('#basculesformation_'+idsf).bind('click',{id: idsf},basculerSuperFormation);
-	addHandle(line.children('td.laction'), "sformation");
-	$('#basculesformation_'+idsf).droppable({accept:'div.handle.formation', drop: dropLine, activeClass: '.ui-state-highlight',tolerance:'touch'});
-    }
-    if (type == "formation") {
-	var idf = o["id_formation"];
-	/* histogrammes et logs */
-	line.children('td.laction')
-	    .prepend('<div class="micropalette"><div class="histoOff" id="histoDesCoursFormation'+idf+'"></div><div class="logOff" id="logsFormation'+idf+'"></div></div>');
-	$('#histoDesCoursFormation'+idf).bind('click',{id: idf},histoDesCours);
-	$('#logsFormation'+idf).bind('click',{id: idf},logsFormation);
-	/* bascule de formation */
-	line.children('td.laction')
-	    .prepend('<div class="basculeOff" id="basculeformation_'+idf+'" />');
-	$('#basculeformation_'+idf).bind('click',{id: idf},basculerFormation);
-	$('#basculeformation_'+idf).droppable({accept:'div.handle.cours', drop: dropLine, activeClass: '.ui-state-highlight',tolerance:'touch'});
-	/* */
-	var colspan = largeurligne($("#skelformation"));
-	line.before('<tr class="imgformation"><td class="imgformation" colspan="'+colspan+'"><div id="imgformation'+idf +'" class="imgformation"></div></td></tr>');	
-    }
-    if (type == "tranche") {
-	addMult(line.children('td.action')); 
-	if (o["id_enseignant"] == 3) {
-	    addChoisir(line.children('td.laction')); 	    
-	} else {
-	    removeChoisir(line.children('td.laction'));
-	}
-    }
-    if (type == "enseignant") {
-	line.children('td.laction')
-	    .prepend('<div class="basculeOff" id="basculeenseignant_'+o["id_enseignant"]+'" />')
-	    .bind('click',{id: o["id_enseignant"]},basculerEnseignant);
-    }
-    addRm(line.find('td.action')); 
 }
 /* ------- FIN REMPLISSAGE DES TABLEAUX ---------*/
 
@@ -2635,7 +3052,7 @@ $(document).ready(function () {
 	L = new ligne(); // <-- var globale
 
 	/* infobox: liens externes */
-	$("div.infobox a").click(function(){window.open(this.href);return false;});
+/*	$("div.infobox a").click(function(){window.open(this.href);return false;}); */
 
 	/* TEST */
 	if (false) {/* bascules ... */

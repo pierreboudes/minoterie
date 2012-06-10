@@ -38,9 +38,8 @@ function entete() {
 <link type="text/css" href="css/custom-theme/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
-<script type="text/javascript" src="js/jquery.ui.datepicker-fr.js"></script>
+<script type="text/javascript" src="js/jquery.json-2.3.min.js"></script>
 <script type="text/javascript" src="js/dyntab.js"></script>
-<script type='text/javascript' src='js/pain.js'></script>
 EOD;
     for($i = 1; $i < $narg; $i++){
 	$arg = func_get_arg($i);

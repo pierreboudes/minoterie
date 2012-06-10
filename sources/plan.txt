@@ -1,0 +1,54 @@
+Trois rôles :
+- r1 chef de département
+- r2 enseignant d'un département (ou de plusieurs)
+- r3 super utilisateur / Vanessa
+
+
+Des interfaces :
+-i1 importer des déclarations (pour r1)
+-i2 annoter une déclaration (r2)
+-i3 lister les déclarations / lire une déclaration annotée la marquer comme traitée (lock) (r3)
+- i4 admin.
+
+i1 : departement.php
+pre-i2 et pre-i3 : index.php (liste declarations)
+i2: declarer.php
+i4 : admin.php
+
+
+Annotations (declarer)
+i2:  
+- creer l'annotation d'un minot
+- annoter
+- enregistrer sans signer (complete = 0)
+- signer l'annotation et enregistrer (complete = 1)
+i3: 
+- signaler comme traitée (traitee = 1)
+
+Des requêtes :
+- pour l'importation.
+- lister les déclarations annotées d'une personne par date.
+- lister les déclarations annotées de tout le monde par département et par personne.
+
+Interfaces de données :
+**json_new.php
+utilisateur
+annotation
+departement
+**json_get.php
+type: utilisateur id ou id_par
+type: departement id ou id_par
+type: "minot" à partir de login ou id_dpt + id_ens: liste de minots d'un utilisateur, du dernier au premier
+type: "intervention" interventions d'un minot
+type: "annotation" dernière annotation d'un minot 
+type: "declaration" liste des id_enseignant ayant deja une declaration dans un departement et date/id de la declaration et de l'annotation éventuelle ainsi que son statut (traitée ou non).
+**json_rm.php
+utilisateur
+departement
+annotation ?
+**json_modify.php
+utilisateur
+departement
+annotation
+**json_importer_declarations.php
+des declarations tels que sortie par json_get.php?type=declarations de pain. OK complet.

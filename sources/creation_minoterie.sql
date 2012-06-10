@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS minoterie_minot (
   statut varchar(40) COLLATE utf8_swedish_ci DEFAULT NULL,
   service float unsigned DEFAULT '192',
   email varchar(60) COLLATE utf8_swedish_ci DEFAULT NULL,
+  traitee smallint(1) NOT NULL DEFAULT 0,
   modification timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_minot),
   KEY id_departement (id_departement),
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS minoterie_minot (
 
 CREATE TABLE IF NOT EXISTS minoterie_intervention (
   id_intervention mediumint(8) NOT NULL AUTO_INCREMENT,
-  id_minot mediumint(8) NOT NULL,
+  id_minot mediumint(8) NOT NULL, 
   nom_formation varchar(256) COLLATE utf8_swedish_ci NOT NULL,
   annee_etude tinyint(3) unsigned NOT NULL,
   parfum varchar(40) COLLATE utf8_swedish_ci NOT NULL,
@@ -56,7 +57,6 @@ CREATE TABLE IF NOT EXISTS minoterie_annotation (
   jsannot text COLLATE utf8_swedish_ci,
   commentaire text COLLATE utf8_swedish_ci,
   complete smallint(1) NOT NULL DEFAULT 0,
-  traitee smallint(1) NOT NULL DEFAULT 0,
   modification timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_annotation),
   KEY id_minot (id_minot)
@@ -66,6 +66,8 @@ CREATE TABLE IF NOT EXISTS minoterie_utilisateur (
   id_utilisateur mediumint(8) NOT NULL,
   login varchar(40) COLLATE utf8_swedish_ci DEFAULT NULL,
   id_departement mediumint(8) DEFAULT NULL,
+  prenom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
+  nom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
   su tinyint(3) unsigned NOT NULL DEFAULT '0',
   modification timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_utilisateur),

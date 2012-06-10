@@ -27,18 +27,37 @@ phpCAS::setNoCasServerValidation();
 
 require_once('inc_connect.php');
 
+/** retourne l'utilisateur enregistré correspondant au login CASet le cas échéant son département */
 function minoterie_getuser() {
     global $link;
     $login = phpCAS::getUser();
-    $query = "SELECT id_utilisateur, login, id_departement, su 
-                 FROM minoterie_enseignant 
+    $query = "SELECT id_utilisateur, login, su, minoterie_departement.*
+                 FROM minoterie_utilisateur LEFT JOIN minoterie_departement 
+                 ON minoterie_utilisateur.id_departement = minoterie_departement.id_departement 
                  WHERE login LIKE '$login' LIMIT 1";
-    $result = $link->query($query);
+    $result = $link->query($query) or die("Échec de la requête ".$query."\n".$link->error);
     if ($user = $result->fetch_array()) {
 	return $user;
     } else {
 	return NULL;
     }
+}
+/** retourne la liste des departements dans lesquels l'utlisateur CAS a une declaration */
+function minoterie_getens() {
+    global $link;
+    $login = phpCAS::getUser();
+    $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee, 
+                      minoterie_departement.*, nom, prenom
+                 FROM ((SELECT id_enseignant, max(modification) as modification 
+                                   FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant) as t 
+                           NATURAL JOIN (minoterie_minot as u)) JOIN minoterie_departement 
+                 ON u.id_departement = minoterie_departement.id_departement";
+    $result = $link->query($query)  or die("Échec de la requête ".$query."\n".$link->error);
+    $ens = array();
+    while ($dep = $result->fetch_assoc()) {
+	$ens[] = $dep;
+    } 
+    return $ens;
 }
 
 function authentication() {

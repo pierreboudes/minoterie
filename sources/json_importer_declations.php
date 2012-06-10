@@ -71,6 +71,7 @@ function json_importer_declarations_php() {
     if (0 < count($val)) {
 	inserer_interventions($val);
     }
+    echo '{"ok": "ok"}';
 }
 
 json_importer_declarations_php();

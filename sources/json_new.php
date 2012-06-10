@@ -32,18 +32,17 @@ require_once("inc_functions.php");
 function json_new_php() {
     global $link;
     global $user;
-$champs = array(
-   "utilisateur" => array(
-       "login", "id_departement", "su"
-	),
-    "departement" => array(
-	"nom_departement", "url_pain"
-	),
-    "annotation" => array(
-	"id_minot", "jsannot", "commentaire", "complete",
-	"traitee"
-	)
-    );
+    $champs = array(
+	"utilisateur" => array(
+	    "login", "id_departement", "su"
+	    ),
+	"departement" => array(
+	    "nom_departement", "url_pain"
+	    ),
+	"annotation" => array(
+	    "id_minot", "jsannot", "commentaire", "complete"
+	    )
+	);
 
 if (NULL != ($readtype = getclean("type"))) {
     if ($readtype == "utilisateur") {	
@@ -52,7 +51,7 @@ if (NULL != ($readtype = getclean("type"))) {
 	$type = "departement";
     } else if ($readtype == "annotation") {	
 	$type = "annotation";
-	$par = "id_annotation";
+	$par = "id_minot";
     } else {
 	errmsg("type indéfini");
     }
@@ -60,10 +59,8 @@ if (NULL != ($readtype = getclean("type"))) {
     errmsg('erreur du script (type manquant).');
 }
 
-if (isset($_GET["id_parent"])) {
-    
-    $id_parent = getnumeric("id_parent");
-
+if (NULL != ($id_parent = getnumeric("id_parent"))) {
+       
     if (!peutediter($type,NULL,$id_parent)) {
 	errmsg("droits insuffisants.");
     }
@@ -84,7 +81,7 @@ if (isset($_GET["id_parent"])) {
 	$setsql[] = '`'.$field.'` = "'.$val.'"';
     };
     $strset = implode(", ", $setsql);
-    $query = "INSERT INTO pain_${type} SET $strset, modification = NOW()";
+    $query = "INSERT INTO minoterie_${type} SET $strset, modification = NOW()";
 
     /* execution de la requete */
 

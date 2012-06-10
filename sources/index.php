@@ -19,19 +19,83 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('authentication.php'); 
+require_once('authentication.php');
 $user = weak_auth();
-$annee = annee_courante();
 require_once("inc_headers.php"); /* pour en-tete et pied de page */
 entete("déclaration des services", "minoterie_index.js");
 require_once("utils.php");
 
-echo '<div id="user" class="hiddenvalue">';
-echo '<span class="id">'.$user["id_enseignant"].'</span>';
-echo '<span class="su">'.$user["su"].'</span>';
-echo '<span class="id_departement">'.$user["id_departement"].'</span>';
-echo '</div>';
+function index_php() {
+    global $link;
+    global $user;
+    $ens = minoterie_getens();
+    $login = phpCAS::getUser(); 
+    if (NULL != $user) {
+	echo '<div id="user" class="hiddenvalue">';
+	echo '<span class="id">'.$user["id_utilisateur"].'</span>';
+	echo '<span class="su">'.$user["su"].'</span>';
+	echo '<span class="id_departement">'.$user["id_departement"].'</span>';
+	echo '<span class="nom_departement">'.$user["nom_departement"].'</span>';
+	echo '<span class="url_pain">'.$user["url_pain"].'</span>';
+	echo '</div>';
+	$nom = $user["prenom"]." ".$user["nom"];
+    } else {
+	$nom = $login;
+    }
+    /* message d'accueil */
+    echo "<center><div class=\"infobox\"><p>Bonjour $nom,</p><p>";
+    $ndecl = count($ens);
+    if (0 == $ndecl) {
+	echo "Vous n'avez pas de service déclaré dans la minoterie.";
+    } else {
+	if (1 == $ndecl){
+	    echo "Vous avez un service déclaré au département ".$ens[0]["nom_departement"].".";
+	} else {
+	    echo "Vous avez $n déclarations de services dans différents départements.";
+	}
+	echo " Vous pouvez visualiser une déclaration en cliquant sur le triangle à gauche du nom de département ci-dessous, puis l'annoter et la valider en utilisant les boutons.";
+    }
+    echo "</p>";
+    if (NULL != $user) {
+	echo "<p>Vous pouvez accéder à :<ul>";
+	if ($user["su"]) {
+	    echo "<li>la <a href=\"lecture.php\">liste des déclarations</a> de la minoterie</li>";
+	    echo "<li>l'<a href=\"admin.php\">administration</a> de la minoterie</li>";
+	}
+	if (NULL != $user["id_departement"]) {
+	    echo "<li>l'<a href=\"importer.php\">importation de déclarations</a> depuis le pain du département <b>".
+		$user["nom_departement"]."</b></li>";
+	}
+	echo "</ul></p>";
+    }
+    echo "</div></center>"; /* fin infobox */
 
+    foreach ($ens as $dpt) {
+	$id_d = $dpt["id_departement"];
+	$id_m = $dpt["id_minot"];
+	$nom_d = $dpt["nom_departement"];
+	$url_d = $dpt["url_pain"];
+	$modif = $dpt["modification"];
+	$traitee = $dpt["traitee"];
+
+	echo "<center><div id=\"departement_$id_d\" class=\"departement\">
+              <table class=\"departement\">
+              <tbody><tr id=\"minot_$id_m\" class=\"minot\">
+              <td class=\"laction\">
+                <div id=\"basculeminot_$id_m\" class=\"basculeOff\" onclick=\"basculerMinot($id_m, true, $traitee)\">
+              </td>
+              <td class=\"nom_departement\">Déclaration transmise par le département $nom_d (depuis <a href=\"$url_d\">pain</a>)</td>
+              <td class=\"modification\">$modif</td>";
+	if ($traite) {
+	    echo "<td class=\"traite\"><div class=\"traiteOn\">déclaration traitée</div></td>";
+	} else {
+	    echo "<td class=\"traite\"></td>";
+	}
+	echo "</tr></tbody></table><div></center>"; 
+    }
+}
+
+index_php();
 
 echo '<div id="vuecourante"></div>';
 

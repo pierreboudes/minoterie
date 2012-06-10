@@ -96,6 +96,7 @@ function getjsonaofaa($s) {
     } else {
 	return NULL;
     }
+    $source =str_replace('\"','"', $source);
     $o = json_decode($source, true); /* o tableau de tableaux associatifs */
     foreach ($o as $i => $ligne) {
 	foreach ($ligne as $name => $cell) {

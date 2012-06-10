@@ -36,10 +36,12 @@ function json_modify_php($readtype, $id) {
 	$type = "departement";
     } else if ($readtype == "annotation") {
 	$type = "annotation";
+    } else if ($readtype == "declaration") {
+	$type = "minot";
     } else {
 	errmsg("erreur de script (type inconnu)");
     }
-    if (!peutediter($type,$id,NULL)) {
+    if (!peutediter($type, $id, NULL)) {
 	errmsg("droits insuffisants.");
     }
 
@@ -51,8 +53,10 @@ $champs = array(
 	"nom_departement", "url_pain"
 	),
     "annotation" => array(
-	"id_minot", "jsannot", "commentaire", "complete",
-	"traitee"
+	"id_minot", "jsannot", "commentaire", "complete"
+	),
+       "minot" => array(
+	   "traitee"
 	)
     );
 
@@ -81,14 +85,14 @@ $champs = array(
     $strset = implode(", ", $setsql);
        
     if ($strset != "") { /* il y a de vraies modifs */
-	$query = "UPDATE pain_${type} ".
+	$query = "UPDATE minoterie_${type} ".
 	    "SET $strset, modification = NOW() ".
 	    "WHERE `id_$type`=".$id;
 
 	if (!$link->query($query)) {
 	    errmsg("erreur avec la requete :\n".$query."\n".$link->error);
 	}
-	pain_log($query);
+	minoterie_log($query);
     }
 	
     /* affichage de la nouvelle entree en json */
@@ -102,7 +106,7 @@ if (NULL == ($readtype = getclean("type"))) {
 }
 
 if (NULL != ($id = getnumeric("id"))) {
-    json_modify_php($annee, $readtype, $id);
+    json_modify_php($readtype, $id);
 } else {
     errmsg('erreur du script (id manquant).');
 }
