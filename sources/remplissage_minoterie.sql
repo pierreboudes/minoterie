@@ -9,6 +9,6 @@ VALUES (3, 'mathématiques', 'http://servens-galilee.univ-paris13.fr/mathematiqu
 INSERT INTO `minoterie_departement` (`id_departement`, `nom_departement`, `url_pain`) 
 VALUES (4, 'physique', 'http://servens-galilee.univ-paris13.fr/physique/pain/');
 INSERT INTO `minoterie_departement` (`id_departement`, `nom_departement`, `url_pain`) 
-VALUES (5, 'un testeur', 'http://localhost:8888/mathpain/');
+VALUES (5, 'demo pain', '../pain/');
 
 INSERT INTO `minoterie_utilisateur` (`login`,`prenom`, `nom`, `id_departement`, `su`) VALUES ('boudes', 'Pierre', 'Boudes', 2, 1);

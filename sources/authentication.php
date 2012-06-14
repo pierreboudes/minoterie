@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
+error_reporting(E_ALL);
 require_once('CAS.php');
 // error_reporting(E_ALL & ~E_NOTICE);
 phpCAS::client(CAS_VERSION_2_0,'cas.univ-paris13.fr',443,'/cas/',true);
@@ -31,7 +32,7 @@ require_once('inc_connect.php');
 function minoterie_getuser() {
     global $link;
     $login = phpCAS::getUser();
-    $query = "SELECT id_utilisateur, login, su, minoterie_departement.*
+    $query = "SELECT id_utilisateur, login, su, nom, prenom, minoterie_departement.*
                  FROM minoterie_utilisateur LEFT JOIN minoterie_departement 
                  ON minoterie_utilisateur.id_departement = minoterie_departement.id_departement 
                  WHERE login LIKE '$login' LIMIT 1";
