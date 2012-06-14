@@ -36,7 +36,7 @@ function entete() {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel='stylesheet' media='all' href='css/general.css' type='text/css' />
 <link type="text/css" href="css/custom-theme/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.json-2.3.min.js"></script>
 <script type="text/javascript" src="js/dyntab.js"></script>
