@@ -1356,7 +1356,7 @@ function getjson(url,data,callback) {
 	     url: url,
 	     data:  data,
 	     datatype: datatype,
-	     crossDomain: true, /* ATTENTION */
+/*	     crossDomain: true,  */
 	     error: function () {alert('erreur ajax ! [url: '+url+'] [data: '+data+']');},
 	     success: function(data) {
 		 var o;
