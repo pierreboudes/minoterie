@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS minoterie_intervention (
   semestre tinyint(3) unsigned NOT NULL,
   nom_cours varchar(256) COLLATE utf8_swedish_ci NOT NULL,
   code_geisha varchar(16) COLLATE utf8_swedish_ci DEFAULT NULL,
+  id_section int(3) unsigned NOT NULL DEFAULT '0',
   cm double unsigned DEFAULT NULL,
   td double unsigned DEFAULT NULL,
   tp double unsigned DEFAULT NULL,
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS minoterie_annotation (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 CREATE TABLE IF NOT EXISTS minoterie_utilisateur (
-  id_utilisateur mediumint(8) NOT NULL,
+  id_utilisateur mediumint(8) NOT NULL AUTO_INCREMENT,
   login varchar(40) COLLATE utf8_swedish_ci DEFAULT NULL,
   id_departement mediumint(8) DEFAULT NULL,
   prenom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
@@ -73,3 +74,5 @@ CREATE TABLE IF NOT EXISTS minoterie_utilisateur (
   PRIMARY KEY (id_utilisateur),
   KEY login (login)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+
+

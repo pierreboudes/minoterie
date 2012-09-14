@@ -28,6 +28,15 @@ phpCAS::setNoCasServerValidation();
 
 require_once('inc_connect.php');
 
+date_default_timezone_set('Europe/Paris'); /* pour strtotime() */
+
+/**  changement d'annee le 1er septembre  */
+function default_year() {
+    $an = date('Y', strtotime('-8 month'));
+    return $an;    
+}
+
+
 /** retourne l'utilisateur enregistré correspondant au login CASet le cas échéant son département */
 function minoterie_getuser() {
     global $link;

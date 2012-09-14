@@ -21,7 +21,7 @@
  */
 require_once('authentication.php'); 
 $user = authentication();
-$annee = "2011";
+$annee = default_year();
 
 require_once("inc_connect.php");
 require_once("utils.php");

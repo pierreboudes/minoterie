@@ -38,7 +38,7 @@ function importer_php() {
 	echo '<span class="nom_departement">'.$user["nom_departement"].'</span>';
 	echo '<span class="url_pain">'.$user["url_pain"].'</span>';
 	echo '</div>';
-	echo "<div id=\"annee\" class=\"hiddenvalue\">2011</div>";
+	echo "<div id=\"annee\" class=\"hiddenvalue\">".default_year()."</div>";
 
 	$nom = $user["prenom"]." ".$user["nom"];
 	echo "<center><div class=\"infobox\"><p>Importer des services depuis votre pain de département : dérouler les catégories et faire une sélection d'enseignants, dans la colonne sélection.</p></div></center>";
