@@ -62,6 +62,9 @@ function json_get_php($annee, $readtype) {
                     id_enseignant,
                     u.nom,
                     u.prenom,
+                    u.statut,                 
+                    u.service,                 
+                    u.email,
                     u.id_minot,
                     u.id_minot as id,
                     u.id_minot as id_declaration,
@@ -96,11 +99,15 @@ function json_get_php($annee, $readtype) {
 	}
     } else if ($readtype == "declens") {
 	$type = "declens";
+	$par = "id_enseignant";
 	$requete = "SELECT
                     \"$type\" as type,
                     id_enseignant,
                     u.nom,
                     u.prenom,
+                    u.statut,                 
+                    u.service,                 
+                    u.email,                 
                     u.id_minot,
                     u.id_minot as id,
                     u.id_minot as id_$type,

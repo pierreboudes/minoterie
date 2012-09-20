@@ -36,7 +36,7 @@ function json_modify_php($readtype, $id) {
 	$type = "departement";
     } else if ($readtype == "annotation") {
 	$type = "annotation";
-    } else if ($readtype == "declaration") {
+    } else if (($readtype == "declaration") || ($readtype == "declens")) {
 	$type = "minot";
     } else {
 	errmsg("erreur de script (type inconnu)");

@@ -32,9 +32,6 @@ function lecture_php() {
     echo '<div id="user" class="hiddenvalue">';
     echo '<span class="id">'.$user["id_utilisateur"].'</span>';
     echo '<span class="su">'.$user["su"].'</span>';
-    echo '<span class="id_departement">'.$user["id_departement"].'</span>';
-    echo '<span class="nom_departement">'.$user["nom_departement"].'</span>';
-    echo '<span class="url_pain">'.$user["url_pain"].'</span>';
     echo '</div>';
     $nom = $user["prenom"]." ".$user["nom"];
     /* message d'accueil */

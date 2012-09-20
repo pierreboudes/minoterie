@@ -2891,7 +2891,9 @@ function replaceLine(tabo) {
 	});
     ligne.find('td.action button.okl').remove();
     removeReload(ligne.children('td.action'));
-    addRm(ligne.children('td.action'));
+    if ((o["type"] != "declens") && (o["type"] != "declaration")) {
+	addRm(ligne.children('td.action'));
+    }
     if (o["type"] == "tranche") {
 	addMult(ligne.children('td.action')); 
 	if (o["id_enseignant"] == 3) {

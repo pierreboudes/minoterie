@@ -30,13 +30,10 @@ function index_php() {
     global $user;
     $ens = minoterie_getens();
     $login = phpCAS::getUser(); 
-    if (NULL != $user) {
+    if ((NULL != $user) && (NULL != $user["id_utilisateur"])) {
 	echo '<div id="user" class="hiddenvalue">';
 	echo '<span class="id">'.$user["id_utilisateur"].'</span>';
 	echo '<span class="su">'.$user["su"].'</span>';
-	echo '<span class="id_departement">'.$user["id_departement"].'</span>';
-	echo '<span class="nom_departement">'.$user["nom_departement"].'</span>';
-	echo '<span class="url_pain">'.$user["url_pain"].'</span>';
 	echo '</div>';
 	$nom = $user["prenom"]." ".$user["nom"];
     } else {
@@ -51,7 +48,7 @@ function index_php() {
 	if (1 == $ndecl){
 	    echo "Vous avez un service déclaré au département ".$ens[0]["nom_departement"].".";
 	} else {
-	    echo "Vous avez $n déclarations de services dans différents départements.";
+	    echo "Vous avez $ndecl déclarations de services dans différents départements.";
 	}
 	echo " Vous pouvez visualiser une déclaration en cliquant sur le triangle à gauche du nom de département ci-dessous, puis l'annoter et la valider en utilisant les boutons.";
     }
@@ -95,7 +92,7 @@ function index_php() {
               </td>
               <td class=\"nom_departement\">Déclaration transmise par le département $nom_d (depuis <a href=\"$url_d\">pain</a>)</td>
               <td class=\"modification\">$modif</td>";
-	if ($traite) {
+	if ($traitee) {
 	    echo "<td class=\"traite\"><div class=\"traiteOn\">déclaration traitée</div></td>";
 	} else {
 	    echo "<td class=\"traite\"></td>";
