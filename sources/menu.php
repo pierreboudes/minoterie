@@ -37,16 +37,17 @@ function ig_formselectannee($annee)
 	echo '</option>';
     }
 }
-?>
-<ul id="menu">
-      <li><a href="./">accueil</a></li>
-      <li><a href="departement.php">departement</a></li>
-<?php
-    if (1 == $user["su"]) {
-	echo '<li><a href="admin.php">admin</a></li>';
+echo '<ul id="menu">';
+echo '<li><a href="./">accueil</a></li>';
+if (NULL != $user) {
+    if (NULL != $user["departements"]) {
+	echo '<li><a href="importer.php">importer des déclarations</a></li>';
     }
+    if (1 == $user["su"]) {
+	echo '<li><a href="lecture.php">toutes les déclarations</a></li>';
+	    echo '<li><a href="admin.php">admin</a></li>';
+    }
+}
 ?>
       <li><a href="logout.php">logout</a></li>
-      <li>
-</li>
 </ul>

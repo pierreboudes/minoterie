@@ -410,10 +410,10 @@ colorcell.prototype = new immutcell();
 /* constructeur de non-cellule coloriant la ligne */
 function colorlinecell() {
     this.colorlist = ['lightgreen', 'pink', 'transparent'];
-    this.colorlistlegende = ['ligne conservée', 'nouvelle ligne', 'ligne à annoter'];
+    this.colorlistlegende = ['ok', 'erreur', ''];
     this.setval = function (c, o) {
 	c.removeClass("edit");
-	c.html('<span class="colorlinelegende">ligne à annoter</span><div class="hiddenvalue">transparent</div>');
+	c.html('<span class="colorlinelegende"></span><div class="hiddenvalue">transparent</div>');
 	var clist = this.colorlist;
 	var llist = this.colorlistlegende;
 	c.bind('click', function () {
@@ -1250,6 +1250,8 @@ function ligne() {
     this.color_tp.name = "tp";
     this.color_alt = new colorcell();
     this.color_alt.name = "tp";
+    this.color_section = new colorcell();
+    this.color_section.name = "section";
     this.nom_cours = new immutcell();
     this.nom_cours.name = "nom_cours";
     this.nom_formation = new immutcell();
@@ -1260,6 +1262,8 @@ function ligne() {
     this.color_semestre.name = "semestre";
     this.nom_departement = new immutcell();
     this.nom_departement.name = "nom_departement";
+    this.departement = new immutcell();
+    this.departement.name = "departement";
     this.enseignant = new enseignant();
     this.derniere_declaration = new immutcell();
     this.derniere_declaration.name = "modification_minot";
@@ -1685,7 +1689,7 @@ function basculerMinot(e, boutons_annot, traitee) {
 	}
     }
     var sid = idString({id: id, type: type});
-    var bascule =  $('#basculeminot_'+id);
+    var bascule =  $('#bascule'+type+'_'+id);
     bascule.toggleClass('basculeOff');
     bascule.toggleClass('basculeOn');
     if (bascule.hasClass('basculeOff')) {
@@ -1791,6 +1795,7 @@ function collecterAnnotation(id) {
 	var color_td = $(this).find('td.color_td > div.hiddenvalue').text();
 	var color_tp = $(this).find('td.color_tp > div.hiddenvalue').text();
 	var color_alt = $(this).find('td.color_alt > div.hiddenvalue').text();
+	var color_section = $(this).find('td.color_section > div.hiddenvalue').text();
 	var color_code = $(this).find('td.color_code_geisha > div.hiddenvalue').text();
 	t.push({id_intervention: idtr, 
 		color_intervention: color,
@@ -1799,6 +1804,7 @@ function collecterAnnotation(id) {
 		color_td: color_td,
 		color_tp: color_tp,
 		color_alt: color_alt,
+		color_section: color_section,
 		color_semestre: color_semestre,
 		color_code: color_code
 	       });
@@ -1836,6 +1842,8 @@ function appliquerAnnotation(id, o) {
         tr.find('td.color_tp > div.hiddenvalue').text(ligne['color_tp']);
 	tr.find('td.color_alt').css('background-color', ligne['color_alt']);
         tr.find('td.color_alt > div.hiddenvalue').text(ligne['color_alt']);
+	tr.find('td.color_section').css('background-color', ligne['color_section']);
+        tr.find('td.color_section > div.hiddenvalue').text(ligne['color_section']);
 	tr.find('td.color_semestre').css('background-color', ligne['color_semestre']);
         tr.find('td.color_semestre > div.hiddenvalue').text(ligne['color_semestre']);
 	tr.find('td.color_code_geisha').css('background-color', ligne['color_code']);
@@ -2753,10 +2761,10 @@ function appendItem(type, prev, o, list) {
 	    cell.fadeOut(0);
 	}
     }
-    if (type == "declaration") {
+    if ((type == "declaration") || (type == "declens")) {
 	line.children('td.laction')
-	    .prepend('<div class="basculeOff" id="basculeminot_'+o["id_minot"]+'" />')
-	    .bind('click',{id: o["id_minot"], type: "declaration"},basculerMinot);
+	    .prepend('<div class="basculeOff" id="bascule'+type+'_'+o["id_minot"]+'" />')
+	    .bind('click',{id: o["id_minot"], type: type},basculerMinot);
     }
     if (type == "departement") {
 	line.children('td.laction')

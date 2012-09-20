@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS minoterie_intervention (
   semestre tinyint(3) unsigned NOT NULL,
   nom_cours varchar(256) COLLATE utf8_swedish_ci NOT NULL,
   code_geisha varchar(16) COLLATE utf8_swedish_ci DEFAULT NULL,
-  id_section int(3) unsigned NOT NULL DEFAULT '0',
   cm double unsigned DEFAULT NULL,
   td double unsigned DEFAULT NULL,
   tp double unsigned DEFAULT NULL,
@@ -75,4 +74,5 @@ CREATE TABLE IF NOT EXISTS minoterie_utilisateur (
   KEY login (login)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
-
+-- pain_cours.id_section nouveau > minoterie_intervention.section nouveau 
+ALTER TABLE  `minoterie_intervention` ADD  `section` INT( 3 ) UNSIGNED NOT NULL DEFAULT  '0' AFTER  `code_geisha`;

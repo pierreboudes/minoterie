@@ -37,16 +37,34 @@ function default_year() {
 }
 
 
-/** retourne l'utilisateur enregistré correspondant au login CASet le cas échéant son département */
+/** retourne l'utilisateur enregistré correspondant au login CAS et le cas échéant les départements qu'il administre */
 function minoterie_getuser() {
     global $link;
     $login = phpCAS::getUser();
     $query = "SELECT id_utilisateur, login, su, nom, prenom, minoterie_departement.*
                  FROM minoterie_utilisateur LEFT JOIN minoterie_departement 
                  ON minoterie_utilisateur.id_departement = minoterie_departement.id_departement 
-                 WHERE login LIKE '$login' LIMIT 1";
+                 WHERE login LIKE '$login'";
     $result = $link->query($query) or die("Échec de la requête ".$query."\n".$link->error);
-    if ($user = $result->fetch_array()) {
+    if ($listuser = $result->fetch_array()) {
+	$user = Array("id_utilisateur" => $listuser["id_utilisateur"],
+		      "login" => $listuser["login"],
+		      "su" => $listuser["su"],
+		      "nom" => $listuser["nom"],
+		      "prenom" => $listuser["prenom"],
+		      "departements" => Array(Array(
+						 "id_departement" => $listuser["id_departement"],
+						 "nom_departement" => $listuser["nom_departement"],
+						 "url_pain" => $listuser["url_pain"]
+						 ))
+	    );
+	while ($listuser = $result->fetch_array()) {
+	    $user["departements"][] = Array(
+		"id_departement" => $listuser["id_departement"],
+		"nom_departement" => $listuser["nom_departement"],
+		"url_pain" => $listuser["url_pain"]
+		);
+	}	      
 	return $user;
     } else {
 	return NULL;

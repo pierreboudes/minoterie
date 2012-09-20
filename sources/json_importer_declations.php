@@ -27,7 +27,7 @@ function inserer_interventions($val) {
     global $link;
     $q = "INSERT INTO minoterie_intervention 
                       (id_minot, nom_formation, annee_etude, parfum,
-                      id_cours, semestre, nom_cours, code_geisha, cm, td, tp, alt)
+                      id_cours, semestre, nom_cours, code_geisha, section, cm, td, tp, alt)
           VALUES ".implode(',', $val);
     if (!$link->query($q)) {
 	errmsg("erreur avec la requete :\n".$q."\n".$link->error);
@@ -66,7 +66,7 @@ function json_importer_declarations_php() {
 	}
 	$val[] = " (".$id_minot.", ".$ligne["nom_formation"].", ".$ligne["annee_etude"].", ".$ligne["parfum"].", ".
 	    $ligne["id_cours"].", ".$ligne["semestre"].", ".$ligne["nom_cours"].", ".$ligne["code_geisha"].", ".
-	    $ligne["cm"].", ".$ligne["td"].", ".$ligne["tp"].", ".$ligne["alt"].")";
+	    $ligne["section"].", ".$ligne["cm"].", ".$ligne["td"].", ".$ligne["tp"].", ".$ligne["alt"].")";
     }
     if (0 < count($val)) {
 	inserer_interventions($val);

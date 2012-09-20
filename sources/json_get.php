@@ -67,6 +67,7 @@ function json_get_php($annee, $readtype) {
                     u.id_minot as id_declaration,
                     u.modification as modification_minot,
                     traitee,
+                    nom_departement as departement,
                     w.id_annotation,
                     w.modification as modification_annotation
                     FROM  ((SELECT id_enseignant, max(modification) as modification
@@ -76,14 +77,16 @@ function json_get_php($annee, $readtype) {
                           ((SELECT id_minot, max(modification) as modification 
                                    FROM minoterie_annotation GROUP BY id_minot) as v
                            NATURAL JOIN (minoterie_annotation as w))
-                    ON u.id_minot = v.id_minot 
-                    WHERE 1 ";
+                    ON u.id_minot = v.id_minot,
+                       minoterie_departement
+                    WHERE 1 
+                    AND minoterie_departement.id_departement = u.id_departement ";
 	if (isset($_GET["id_parent"]) || isset($_POST["id_parent"])) {
 	    $id_par = getnumeric("id_parent");
 	    if (NULL == $id_par) {
 		errmsg("$par absent de la requete ou non numerique ($readtype)");
 	    }
-	    $requete .= " AND id_departement = $id_par ";
+	    $requete .= " AND u.id_departement = $id_par ";
 	} else 	if (isset($_GET["id"]) || isset($_POST["id"])) {
 	    $id = getnumeric("id");
 	    if (NULL == $id) {
@@ -91,6 +94,40 @@ function json_get_php($annee, $readtype) {
 	    }
 	    $requete .= " AND u.id_minot = $id ";
 	}
+    } else if ($readtype == "declens") {
+	$type = "declens";
+	$requete = "SELECT
+                    \"$type\" as type,
+                    id_enseignant,
+                    u.nom,
+                    u.prenom,
+                    u.id_minot,
+                    u.id_minot as id,
+                    u.id_minot as id_$type,
+                    u.modification as modification_minot,
+                    traitee,
+                    nom_departement as departement,
+                    w.id_annotation,
+                    w.modification as modification_annotation
+                    FROM  ((SELECT id_enseignant, max(modification) as modification
+                                   FROM minoterie_minot  GROUP BY id_enseignant) as t 
+                           NATURAL JOIN (minoterie_minot as u))
+                      LEFT JOIN 
+                          ((SELECT id_minot, max(modification) as modification 
+                                   FROM minoterie_annotation GROUP BY id_minot) as v
+                           NATURAL JOIN (minoterie_annotation as w))
+                    ON u.id_minot = v.id_minot,
+                       minoterie_departement
+                    WHERE 1 
+                    AND minoterie_departement.id_departement = u.id_departement ";
+	if (isset($_GET["id"]) || isset($_POST["id"])) {
+	    $id = getnumeric("id");
+	    if (NULL == $id) {
+		errmsg("id absent de la requete ou non numerique ($readtype)");
+	    }
+	    $requete .= " AND u.id_minot = $id ";
+	}
+	$requete .= " ORDER BY u.nom, u.prenom, u.id_departement ;";
     } else {
 	errmsg("erreur de script (type inconnu)");
     }

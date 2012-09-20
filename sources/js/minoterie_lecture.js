@@ -28,4 +28,8 @@ $(document).ready(function(){
     appendList({type: "departement", id_parent: 0},$("#departements0"),function (o) { 
 	/* rien a ajouter */
     });
+    $('#vuecourante').append('<table class="super" id="enseignants0"><tbody></tbody></table>');
+    appendList({type: "declens", id_parent: 0},$("#enseignants0"),function (o) { 
+	/* rien a ajouter */
+    });
 });

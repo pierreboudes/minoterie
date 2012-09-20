@@ -24,7 +24,7 @@ $user = weak_auth();
 require_once("inc_headers.php"); /* pour en-tete et pied de page */
 entete("déclaration des services", "minoterie_index.js");
 require_once("utils.php");
-
+include("menu.php");
 function index_php() {
     global $link;
     global $user;
@@ -62,11 +62,20 @@ function index_php() {
 	    echo "<li>la <a href=\"lecture.php\">liste des déclarations</a> de la minoterie</li>";
 	    echo "<li>l'<a href=\"admin.php\">administration</a> de la minoterie</li>";
 	}
-	if (NULL != $user["id_departement"]) {
-	    echo "<li>l'<a href=\"importer.php\">importation de déclarations</a> depuis le pain du département <b>".
-		$user["nom_departement"]."</b></li>";
+	if (NULL != $user["departements"]) {
+	    echo "<li>l'<a href=\"importer.php\">importation de déclarations</a> depuis le pain du département ";
+	    echo '<ul>';
+	    $first = true;
+	    foreach($user["departements"] as $dept)
+	    {
+		echo '<li>'.($first?'':'ou du département ');
+		$first = false;
+		echo '<span class="nom_departement">'.$dept["nom_departement"].'</span>';
+		echo '</li>';
+	    }
+	    echo '</ul>';
 	}
-	echo "</ul></p>";
+	echo '</ul></p>';
     }
     echo "</div></center>"; /* fin infobox */
 

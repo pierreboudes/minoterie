@@ -24,20 +24,40 @@ $user = weak_auth();
 require_once("inc_headers.php"); /* pour en-tete et pied de page */
 entete("déclaration des services", "minoterie_importer.js");
 require_once("utils.php");
+include("menu.php");
+
 
 function importer_php() {
     global $link;
     global $user;
     $login = phpCAS::getUser(); 
     
-    if ( (NULL != $user) && (NULL != $user["id_departement"])) {
+    if (NULL != $user) {
 	echo '<div id="user" class="hiddenvalue">';
 	echo '<span class="id">'.$user["id_utilisateur"].'</span>';
 	echo '<span class="su">'.$user["su"].'</span>';
-	echo '<span class="id_departement">'.$user["id_departement"].'</span>';
-	echo '<span class="nom_departement">'.$user["nom_departement"].'</span>';
-	echo '<span class="url_pain">'.$user["url_pain"].'</span>';
+	$dept = $user["departements"][0];
+	echo '<ul id="userdept">';
+	echo '<li class="departement">';
+	echo '<span class="id_departement">'.$dept["id_departement"].'</span>';
+	echo '<span class="nom_departement">'.$dept["nom_departement"].'</span>';
+	echo '<span class="url_pain">'.$dept["url_pain"].'</span>';
+	echo '</li></ul>';
 	echo '</div>';
+	echo '<div id="choixdept">Département :';
+	echo '<ul id="departements">';
+	$first = true;
+	foreach($user["departements"] as $dept)
+	{
+	    echo '<li class="departement'.($first?' selected':'').'">';
+	    $first = false;
+	    echo '<span class="id_departement">'.$dept["id_departement"].'</span>';
+	    echo '<span class="nom_departement">'.$dept["nom_departement"].'</span>';
+	    echo '<span class="url_pain">'.$dept["url_pain"].'</span>';
+	    echo '</li>';
+	}
+	echo '</ul></div>';
+
 	echo "<div id=\"annee\" class=\"hiddenvalue\">".default_year()."</div>";
 
 	$nom = $user["prenom"]." ".$user["nom"];
@@ -51,12 +71,6 @@ function importer_php() {
 importer_php();
 
 include("skel_importer.html");
-?>
-<p>
-<a href="http://validator.w3.org/check?uri=referer"><img
-    src="http://www.w3.org/Icons/valid-xhtml10-blue"
-    alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
-    </p>
-<?php
+
 piedpage();
 ?>

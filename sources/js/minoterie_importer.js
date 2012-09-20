@@ -24,6 +24,24 @@
 
 $(document).ready(function(){
     $('#skel').fadeOut(0);
+    var listdept = $('#departements').find('li.departement');
+    /* TODO faire plutôt un tabs ou un truc du genre */
+    if (listdept.length > 1) {
+	listdept.each(function (i,e) {	    
+	    $(this).click(function(e) {
+		$(this).siblings('li.selected').removeClass('selected');
+		$('#vuecourante').empty();
+		$('#dialog_importer').remove();
+		$('#userdept').empty();
+		$(this).clone(false, false).appendTo('#userdept');
+		$(this).addClass('selected');
+		ajouterTableCategories($("#vuecourante"));
+		ajouterBoutonsImportation($("#vuecourante"));
+		return false;
+	    });
+	});
+    } 
+
     ajouterTableCategories($("#vuecourante"));
-    ajouterBoutonsImportation($("#vuecourante"))
+    ajouterBoutonsImportation($("#vuecourante"));
 });
