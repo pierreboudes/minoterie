@@ -1249,7 +1249,7 @@ function ligne() {
     this.color_tp = new colorcell();
     this.color_tp.name = "tp";
     this.color_alt = new colorcell();
-    this.color_alt.name = "tp";
+    this.color_alt.name = "alt";
     this.color_section = new colorcell();
     this.color_section.name = "section";
     this.nom_cours = new immutcell();
