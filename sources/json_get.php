@@ -20,7 +20,7 @@
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('authentication.php'); 
-$user = authentication();
+$user =  weak_auth();
 $annee = default_year();
 
 require_once("inc_connect.php");
