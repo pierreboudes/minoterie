@@ -1223,3 +1223,15 @@ li.departement:hover {
 #departements > li.selected {
    background: url("custom-theme/images/ui-bg_gloss-wave_35_f6a828_500x100.png") repeat-x scroll 50% 50% #F6A828;
 }
+
+#dialog_importer .declaration {
+ font-weight: bold;
+}
+#dialog_importer .annotee {
+    font-weight: bold;
+    border: 1px black dotted;
+}
+#dialog_importer .traitee {
+    font-weight: bold;
+    border-bottom: 2px red solid;
+}

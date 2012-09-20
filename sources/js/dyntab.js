@@ -1597,7 +1597,7 @@ function importerDeclarationSel(e) {
 	    css.push('declaration');
 	    ndecl += 1;
 	}
-	if (existsjQuery(ligne.find('td.annotee > div.yes'))) {
+	if (existsjQuery(ligne.find('td.annotation > div.yes'))) {
 	    css.push('annotee');
 	    nannot += 1;
 	}
@@ -1615,13 +1615,13 @@ function importerDeclarationSel(e) {
     /* message utilisateur */
     var msg = "<p>Voulez-vous vraiment importer les déclarations des personnes suivantes ?</p>";
     if (0 < ntrait + nannot + ndecl) {
-	msg += "<idv class=\"dialog_alert\"><b>Attention certaines déclarations existent déjà dans la minoterie et seront remplacées par votre nouvelle importation :</b> <ul>";
+	msg += "<div class=\"dialog_alert\"><b>Attention certaines déclarations existent déjà dans la minoterie et seront remplacées par votre nouvelle importation :</b> <ul>";
 	if (1 == ndecl) msg += '<li>'+ndecl+' personne a déjà une <span class="declaration">déclaration émise</span></li>';
 	if (1 < ndecl) msg += '<li>'+ndecl+' personnes ont déjà une <span class="declaration">déclaration émise</span></li>';
-	if (1 == nannot) msg += '<li> '+nannot+' de ces déclarations est <span class="declaration">annotée</span></li>';
-	if (1 < nannot) msg += '<li> '+nannot+' de ces déclarations sont <span class="declaration">annotées</span></li>';
-	if (1 == ntrait) msg += '<li>'+ntrait+' de ces déclarations a <span class="declaration">été traitée</span></li>';
-	if (1 < ntrait) msg += '<li>'+ntrait+' de ces déclarations ont <span class="declaration">été traitées</span></li>';
+	if (1 == nannot) msg += '<li>'+nannot+' de ces déclarations est <span class="annotee">annotée</span></li>';
+	if (1 < nannot) msg += '<li>'+nannot+' de ces déclarations sont <span class="annotee">annotées</span></li>';
+	if (1 == ntrait) msg += '<li>'+ntrait+' de ces déclarations a <span class="traitee">été traitée</span></li>';
+	if (1 < ntrait) msg += '<li>'+ntrait+' de ces déclarations ont <span class="traitee">été traitées</span></li>';
 	msg += '</ul></div>';
     }
     msg += '<p>Voici la liste des personnes dont vous souhaitez importer la déclaration : '+noms.join(', ')
@@ -1726,6 +1726,7 @@ function basculerMinot(e, boutons_annot, traitee) {
 		       buttonbox.append(enregistrer);
 		   }
 		   if (boutons && traitee) {
+		       buttonbox.html("Annotation impossible, la déclaration a déjà été traitée.");
 		   }
 		   /* charger les annotations */
 		   getjson("json_get.php", {type: "annotation", id_parent: id}, function (o) {
