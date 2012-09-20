@@ -1820,7 +1820,12 @@ function collecterAnnotation(id) {
 function appliquerAnnotation(id, o) {
     $('#derniere_annot'+id).html('Dernières annotations de la déclaration: '
 				 +o['modification']+'<div class="hiddenvalue">'+o['id_annotation']+'</div>');
-    $('#commentaireannot_'+id).val(o.commentaire);
+
+    /* o.comment a vu ses quotes echappés en html, on trafique un truc pour y remédier */
+    $('#commentaireannot_'+id).after('<div id="tempannot'+id+'" class="hiddenvalue">'+o.commentaire+'</div>');
+    var commentaire = $('#tempannot'+id).text();
+    $('#tempannot'+id).remove();
+    $('#commentaireannot_'+id).val(commentaire);
     /* o.jsannot a vu ses quotes echappés en html, on trafique un truc pour y remédier */
     $('#commentaireannot_'+id).after('<div id="tempannot'+id+'" class="hiddenvalue">'+o.jsannot+'</div>');
     var jsannot = $('#tempannot'+id).text();
