@@ -143,9 +143,15 @@ function checkcell() {
     this.name ="checkcell";
     this.mutable = true;
     this.oneclickedit = true;
+    this.guard = null; /* si guard est une checkcell à "oui" l'édition sera impossible */
 
     /* mode edition direct */
     this.edit = function (c) {
+	if (null != this.guard) {/* */
+	    if (c.siblings("td."+this.guard).find(".yesno").text() == "oui") {
+		return false;
+	    }
+	}
 	if (this.mutable) {	    
 	    if (!c.hasClass('edit')) {
 		c.addClass('edit');
@@ -1240,6 +1246,7 @@ function ligne() {
     this.traitee = new sucheckcell();
     this.traitee.name = "traitee";
     this.selection = new checkcell();
+    this.selection.guard = "traitee";
     this.selection.name = "selection";
     this.color_line = new colorlinecell();
     this.color_cm = new colorcell();
