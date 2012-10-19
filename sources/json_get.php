@@ -117,7 +117,7 @@ function json_get_php($annee, $readtype) {
                     w.id_annotation,
                     w.modification as modification_annotation
                     FROM  ((SELECT id_enseignant, max(modification) as modification
-                                   FROM minoterie_minot  GROUP BY id_enseignant) as t 
+                                   FROM minoterie_minot  GROUP BY id_enseignant, id_departement) as t 
                            NATURAL JOIN (minoterie_minot as u))
                       LEFT JOIN 
                           ((SELECT id_minot, max(modification) as modification 
