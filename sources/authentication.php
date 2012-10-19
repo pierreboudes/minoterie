@@ -76,8 +76,8 @@ function minoterie_getens() {
     $login = phpCAS::getUser();
     $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee, 
                       minoterie_departement.*, nom, prenom
-                 FROM ((SELECT id_enseignant, max(modification) as modification 
-                                   FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant) as t 
+                 FROM ((SELECT id_enseignant, id_departement, max(modification) as modification 
+                                   FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant, id_departement) as t 
                            NATURAL JOIN (minoterie_minot as u)) JOIN minoterie_departement 
                  ON u.id_departement = minoterie_departement.id_departement";
     $result = $link->query($query)  or die("Échec de la requête ".$query."\n".$link->error);
