@@ -2759,7 +2759,7 @@ function recalculateSums(type, id, pref) {
     $('#s2sum'+type+id+' > th.'+pref+'td').html(td2);
     $('#s2sum'+type+id+' > th.'+pref+'tp').html(tp2);
     $('#s2sum'+type+id+' > th.'+pref+'alt').html(alt2);
-    $('#s2sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm1+td1+tp1+alt1);
+    $('#s2sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm2+td2+tp2+alt2);
     $('#s2sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
 
 }
