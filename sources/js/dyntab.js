@@ -516,6 +516,17 @@ function intitule() {
 }
 intitule.prototype = new immutcell();
 
+function intitule_formation() {
+    this.name = "intitule_formation";
+    this.setval = function (c,o) {
+	var s;
+	s = o["nom_formation"];
+	if (o["annee_etude"] != null) s = s+' '+o["annee_etude"];
+	if (o["parfum"] != null) s = s+' '+o["parfum"];
+	c.text(s);
+    }
+}
+intitule_formation.prototype = new immutcell();
 
 function total_complexe(o, nom, prefixe) {
     var s;
@@ -1188,6 +1199,7 @@ function ligne() {
      */
     /* intitule */
     this.intitule = new intitule();
+    this.intitule_formation = new intitule_formation();
     /* stats / totaux */
     this.totaux = new totaux();
     this.totaux_loader = new totaux_loader();
@@ -1714,9 +1726,26 @@ function basculerMinot(e, boutons_annot, traitee) {
 		id_parent: id
 	       },
 	       $('#tableinterventions_'+id+' > tbody'), 
-	       function(){	
-		   $('#tableinterventions_'+id+' tr.intervention').fadeIn("slow");
-	       
+	       function(){
+		   /* effet */
+		   $('#tableinterventions_'+id+' tr.intervention').fadeIn("slow");	
+		   /* ajouter les totaux */
+		   type = "intervention";
+		   var legende = $('#legende'+type+id);
+		   var line = legende.clone().attr('id','sum'+type+id);
+		   line.children('th').html('');
+		   line.children('th.nom_cours').addClass('label').html('total');
+		   $('#table'+type+'s_'+id+' > tbody').append(line);
+		   line = legende.clone().attr('id','s1sum'+type+id);
+		   line.children('th').html('');
+		   line.children('th.nom_cours').addClass('label').html('semestre&nbsp;1');
+		   $('#table'+type+'s_'+id+' > tbody').append(line);
+		   line = legende.clone().attr('id','s2sum'+type+id);
+		   line.children('th').html('');
+		   line.children('th.nom_cours').addClass('label').html('semestre&nbsp;2');
+		   $('#table'+type+'s_'+id+' > tbody').append(line);
+		   recalculateSums(type, id, "color_");
+		   /* ajouter les commentaires */
 		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
 		   var trcommentaire = jQuery('<tr id="trcommentaireinterventions'+id+'"><td colspan='+colspan+' class="commentaire_annotation"><div class="titre_annotation">Commentaires :</div><textarea id="commentaireannot_'+id+'"></textarea><div id="derniere_annot'+id+'" class="titre_annotation">Aucune annotation enregistrée pour cette déclaration</div></td></tr>');
 		   $('#trtableinterventions'+id).after(trbuttonbox).after(trcommentaire);
@@ -2653,7 +2682,7 @@ function reloadChoix(panier,id, annee, type) {
 		   line.children('th').html('');
 		   line.children('th.nom_cours').addClass('label').html('semestre&nbsp;2');
 		   $('#table'+type+' > tbody').append(line);
-		   recalculatePanier(type);
+		   recalculateSums(type);
 		   if (type == "potentiel") {
 		       $('#tablepotentiel > tbody > tr > td').removeClass("mutable");
 		       $('#tablepotentiel > tbody > tr > td.action').hide();		       
@@ -2661,54 +2690,78 @@ function reloadChoix(panier,id, annee, type) {
 	       });
 }
 
-function recalculatePanier(type) {
+function pFloat(s) {
+    if (s === '') {
+	return 0;
+    }
+    return parseFloat(s);
+}
+
+function recalculateSums(type, id, pref) {
+    /* todo passer par un objet pour les args */
     if (type === undefined) {
 	type = "longchoix";
     }
+    if (id === undefined) {
+	id = "";
+    }
+    if (pref === undefined) {
+	pref ="";
+    }
     /* totaux */
-    var body = $('#table'+type+' > tbody');
+    var body = $('#table'+type+'s_'+id+' > tbody');
     var htd = 0; var cm = 0; var td = 0; var tp = 0; var alt = 0;
     var htd1 = 0; var cm1 = 0; var td1 = 0; var tp1 = 0; var alt1 = 0;
     var htd2 = 0; var cm2 = 0; var td2 = 0; var tp2 = 0; var alt2 = 0;
     body.children("tr[id^='"+type+"_']").each(function(i) {
-	    var line = $(this);
-	    htd += parseFloat(line.children('td.htd').text());
-	    cm += parseFloat(line.children('td.cm').text());
-	    td += parseFloat(line.children('td.td').text());
-	    tp += parseFloat(line.children('td.tp').text());
-	    alt += parseFloat(line.children('td.alt').text());
-	    if (line.children('td.semestre').text() == '1') {
-		htd1 += parseFloat(line.children('td.htd').text());
-		cm1 += parseFloat(line.children('td.cm').text());
-		td1 += parseFloat(line.children('td.td').text());
-		tp1 += parseFloat(line.children('td.tp').text());
-		alt1 += parseFloat(line.children('td.alt').text());
+	var linesource = $(this);
+	var line = linesource.clone();
+	line.find('.hiddenvalue').remove();
+	    htd += pFloat(line.children('td.'+pref+'htd').text());
+	cm += pFloat(line.children('td.'+pref+'cm').text()); 
+	    td += pFloat(line.children('td.'+pref+'td').text());
+	    tp += pFloat(line.children('td.'+pref+'tp').text());
+	    alt += pFloat(line.children('td.'+pref+'alt').text());
+	    if (line.children('td.'+pref+'semestre').text() == '1') {
+		htd1 += pFloat(line.children('td.'+pref+'htd').text());
+		cm1 += pFloat(line.children('td.'+pref+'cm').text());
+		td1 += pFloat(line.children('td.'+pref+'td').text());
+		tp1 += pFloat(line.children('td.'+pref+'tp').text());
+		alt1 += pFloat(line.children('td.'+pref+'alt').text());
 	    }
-	    if (line.children('td.semestre').text() == '2') {
-		htd2 += parseFloat(line.children('td.htd').text());
-		cm2 += parseFloat(line.children('td.cm').text());
-		td2 += parseFloat(line.children('td.td').text());
-		tp2 += parseFloat(line.children('td.tp').text());
-		alt2 += parseFloat(line.children('td.alt').text());
+	    if (line.children('td.'+pref+'semestre').text() == '2') {
+		htd2 += pFloat(line.children('td.'+pref+'htd').text());
+		cm2 += pFloat(line.children('td.'+pref+'cm').text());
+		td2 += pFloat(line.children('td.'+pref+'td').text());
+		tp2 += pFloat(line.children('td.'+pref+'tp').text());
+		alt2 += pFloat(line.children('td.'+pref+'alt').text());
 	    }
+	line.remove();
 	});
-    $('#sum'+type+' > th.htd').html(htd);
-    $('#sum'+type+' > th.cm').html(cm);
-    $('#sum'+type+' > th.td').html(td);
-    $('#sum'+type+' > th.tp').html(tp);
-    $('#sum'+type+' > th.alt').html(alt);
+    $('#sum'+type+id+' > th.'+pref+'htd').html(htd);
+    $('#sum'+type+id+' > th.'+pref+'cm').html(cm);
+    $('#sum'+type+id+' > th.'+pref+'td').html(td);
+    $('#sum'+type+id+' > th.'+pref+'tp').html(tp);
+    $('#sum'+type+id+' > th.'+pref+'alt').html(alt);
+    $('#sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm+td+tp+alt);
+    $('#sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
 
-    $('#s1sum'+type+' > th.htd').html(htd1);
-    $('#s1sum'+type+' > th.cm').html(cm1);
-    $('#s1sum'+type+' > th.td').html(td1);
-    $('#s1sum'+type+' > th.tp').html(tp1);
-    $('#s1sum'+type+' > th.alt').html(alt1);
+    $('#s1sum'+type+id+' > th.'+pref+'htd').html(htd1);
+    $('#s1sum'+type+id+' > th.'+pref+'cm').html(cm1);
+    $('#s1sum'+type+id+' > th.'+pref+'td').html(td1);
+    $('#s1sum'+type+id+' > th.'+pref+'tp').html(tp1);
+    $('#s1sum'+type+id+' > th.'+pref+'alt').html(alt1);
+    $('#s1sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm1+td1+tp1+alt1);
+    $('#s1sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
 
-    $('#s2sum'+type+' > th.htd').html(htd2);
-    $('#s2sum'+type+' > th.cm').html(cm2);
-    $('#s2sum'+type+' > th.td').html(td2);
-    $('#s2sum'+type+' > th.tp').html(tp2);
-    $('#s2sum'+type+' > th.alt').html(alt2);
+    $('#s2sum'+type+id+' > th.'+pref+'htd').html(htd2);
+    $('#s2sum'+type+id+' > th.'+pref+'cm').html(cm2);
+    $('#s2sum'+type+id+' > th.'+pref+'td').html(td2);
+    $('#s2sum'+type+id+' > th.'+pref+'tp').html(tp2);
+    $('#s2sum'+type+id+' > th.'+pref+'alt').html(alt2);
+    $('#s2sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm1+td1+tp1+alt1);
+    $('#s2sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
+
 }
 
 /* BLOC ----- PANIER -------------*/
@@ -2845,7 +2898,7 @@ function removeLine(o) {
 			    tr.remove();
 			    oid.type = "choix";
 			    $('#'+idString(oid)).remove();
-			    recalculatePanier(); /* <-- ...plus lent, mais mieux. */
+			    recalculateSums(); /* <-- ...plus lent, mais mieux. */
 			} else {
 			    tr.remove();
 			}

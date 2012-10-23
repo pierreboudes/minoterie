@@ -431,7 +431,10 @@ td.service_annuel, td.service_reel  {
 
 /**** FIN DIMENSIONS ****/
 
-.semestre, .credits, .cm, .td, .tp, .alt, .code_geisha, .action, .groupe, .htd, .choix_htd, .tranche_htd {
+.semestre, .credits, .cm, .td, .tp, .alt, .action, .groupe, .htd, .choix_htd, .tranche_htd {
+    text-align: center;
+}
+.color_semestre,  .color_cm, .color_td, .color_tp, .color_alt {
     text-align: center;
 }
 
