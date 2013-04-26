@@ -1,5 +1,5 @@
 <?php
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -52,15 +52,15 @@ function getclean($s) {
 function getnumeric($s) {
     global $link;
     if (isset($_GET[$s])) {
-	$source = $_GET[$s];
+        $source = $_GET[$s];
     } else if (isset($_POST[$s])) {
-	$source = $_POST[$s];
+        $source = $_POST[$s];
     } else {
-	return NULL;
+        return NULL;
     }
     $a = explode('X',$source);
     foreach ($a as $id) {
-	if (!is_numeric($id)) return NULL;
+        if (!is_numeric($id)) return NULL;
     }
     return $source;
 }
@@ -127,11 +127,11 @@ function cookieclean($s) {
 
 function ip_client() {
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-    $IP = $_SERVER['HTTP_X_FORWARDED_FOR']; 
-    elseif(isset($_SERVER['HTTP_CLIENT_IP']))   
-    $IP = $_SERVER['HTTP_CLIENT_IP'];   
+    $IP = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    elseif(isset($_SERVER['HTTP_CLIENT_IP']))
+    $IP = $_SERVER['HTTP_CLIENT_IP'];
     else
-    $IP = $_SERVER['REMOTE_ADDR'];  
+    $IP = $_SERVER['REMOTE_ADDR'];
     return $IP;
 }
 
@@ -169,7 +169,7 @@ function minoterie_log($message, $logname='minoterie') {
 	for ($i = $nb; $i > 1; --$i) {
 	    @rename($logfile.".".($i - 1),$logfile.".$i");
 	}
-	@rename($logfile,$logfile.'.1');		
+	@rename($logfile,$logfile.'.1');
     }
 }
 

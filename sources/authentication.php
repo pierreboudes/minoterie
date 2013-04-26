@@ -1,5 +1,5 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -33,7 +33,7 @@ date_default_timezone_set('Europe/Paris'); /* pour strtotime() */
 /**  changement d'annee le 1er septembre  */
 function default_year() {
     $an = date('Y', strtotime('-8 month'));
-    return $an;    
+    return $an;
 }
 
 
@@ -42,8 +42,8 @@ function minoterie_getuser() {
     global $link;
     $login = phpCAS::getUser();
     $query = "SELECT id_utilisateur, login, su, nom, prenom, minoterie_departement.*
-                 FROM minoterie_utilisateur LEFT JOIN minoterie_departement 
-                 ON minoterie_utilisateur.id_departement = minoterie_departement.id_departement 
+                 FROM minoterie_utilisateur LEFT JOIN minoterie_departement
+                 ON minoterie_utilisateur.id_departement = minoterie_departement.id_departement
                  WHERE login LIKE '$login'";
     $result = $link->query($query) or die("Échec de la requête ".$query."\n".$link->error);
     if ($listuser = $result->fetch_array()) {
@@ -64,7 +64,7 @@ function minoterie_getuser() {
 		"nom_departement" => $listuser["nom_departement"],
 		"url_pain" => $listuser["url_pain"]
 		);
-	}	      
+	}
 	return $user;
     } else {
 	return NULL;
@@ -74,17 +74,17 @@ function minoterie_getuser() {
 function minoterie_getens() {
     global $link;
     $login = phpCAS::getUser();
-    $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee, 
+    $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee,
                       minoterie_departement.*, nom, prenom
-                 FROM ((SELECT id_enseignant, id_departement, max(modification) as modification 
-                                   FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant, id_departement) as t 
-                           NATURAL JOIN (minoterie_minot as u)) JOIN minoterie_departement 
+                 FROM ((SELECT id_enseignant, id_departement, max(modification) as modification
+                                   FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant, id_departement) as t
+                           NATURAL JOIN (minoterie_minot as u)) JOIN minoterie_departement
                  ON u.id_departement = minoterie_departement.id_departement";
     $result = $link->query($query)  or die("Échec de la requête ".$query."\n".$link->error);
     $ens = array();
     while ($dep = $result->fetch_assoc()) {
 	$ens[] = $dep;
-    } 
+    }
     return $ens;
 }
 

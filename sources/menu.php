@@ -1,7 +1,7 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
- * Copyright 2009-2012 Pierre Boudes,
+ * Copyright 2009-2013 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
  *
  * This file is part of Minoterie.
@@ -20,12 +20,14 @@
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('inc_connect.php');
+require_once('inc_config.php');
+
 function ig_formselectannee($annee)
 {
     global $link;
-    $qans = "SELECT DISTINCT `annee_universitaire` 
+    $qans = "SELECT DISTINCT `annee_universitaire`
              FROM pain_sformation WHERE 1 ORDER BY `annee_universitaire` ASC";
-    $rans = $link->query($qans) 
+    $rans = $link->query($qans)
 	  or die("Échec de la requête sur la table sformation");
     while ($an =$rans->fetch_array()) {
 	echo '<option ';
@@ -37,17 +39,32 @@ function ig_formselectannee($annee)
 	echo '</option>';
     }
 }
-echo '<ul id="menu">';
-echo '<li><a href="./">accueil</a></li>';
-if (NULL != $user) {
-    if (NULL != $user["departements"]) {
-	echo '<li><a href="importer.php">importer des déclarations</a></li>';
+
+function ig_montreretapedeclarations() {
+    if (declarationsdefinitives()) {
+        echo '<div class="montreetape" id="declarationsdefinitives">[Déclarations définitives]</div>';
     }
-    if (1 == $user["su"]) {
-	echo '<li><a href="lecture.php">toutes les déclarations</a></li>';
-	    echo '<li><a href="admin.php">admin</a></li>';
+    else {
+        echo '<div class="montreetape" id="declarationsprevisionnelles">[Déclarations prévisionnelles]</div>';
     }
 }
-?>
-      <li><a href="logout.php">logout</a></li>
-</ul>
+
+function ig_affichermenu() {
+    global $user;
+    echo '<ul id="menu">';
+    echo '<li><a href="./">accueil</a></li>';
+    if (NULL != $user) {
+        if (NULL != $user["departements"]) {
+            echo '<li><a href="importer.php">importer des déclarations</a></li>';
+        }
+        if (1 == $user["su"]) {
+            echo '<li><a href="lecture.php">toutes les déclarations</a></li>';
+            echo '<li><a href="admin.php">admin</a></li>';
+        }
+    }
+    echo '<li><a href="logout.php">logout</a></li>';
+    echo '</ul>';
+}
+
+ig_affichermenu();
+ig_montreretapedeclarations();

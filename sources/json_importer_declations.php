@@ -1,5 +1,5 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -19,13 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once("authentication.php"); 
+require_once("authentication.php");
 $user = authentication();
 require_once("utils.php");
+require_once("inc_config.php");
 
 function inserer_interventions($val) {
     global $link;
-    $q = "INSERT INTO minoterie_intervention 
+    $q = "INSERT INTO minoterie_intervention
                       (id_minot, nom_formation, annee_etude, parfum,
                       id_cours, semestre, nom_cours, code_geisha, section, cm, td, tp, alt)
           VALUES ".implode(',', $val);
@@ -39,8 +40,9 @@ function json_importer_declarations_php() {
     global $user;
     $id_departement = getnumeric("id_departement");
     if (NULL == $id_departement) {
-	errmsg("il manque un id_departement");
+        errmsg("il manque un id_departement");
     }
+    $definitif = declarationsdefinitives()?1:0;
     $o = getjsonaofaa("interventions");
     $id_enseignant = -1;
     $val = array();
@@ -55,10 +57,10 @@ function json_importer_declarations_php() {
 	    }
 
 	    /* faire un nouveau minot */
-	    $q = "INSERT INTO minoterie_minot (id_departement, id_enseignant, login, prenom, nom, email, statut, service)".
+	    $q = "INSERT INTO minoterie_minot (id_departement, id_enseignant, login, prenom, nom, email, statut, service, definitif)".
 		"VALUES (".$id_departement.", ".$id_enseignant.", ".$ligne["login"].
 		", ".$ligne["prenom"].", ".$ligne["nom"].", ".$ligne["email"].
-                ", ".$ligne["statut"].", ".$ligne["service"].");";
+                ", ".$ligne["statut"].", ".$ligne["service"].", $definitif);";
 	    if (!$link->query($q)) {
 		errmsg("erreur avec la requete :\n".$q."\n".$link->error);
 	    }

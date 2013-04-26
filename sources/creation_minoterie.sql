@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS minoterie_minot (
 
 CREATE TABLE IF NOT EXISTS minoterie_intervention (
   id_intervention mediumint(8) NOT NULL AUTO_INCREMENT,
-  id_minot mediumint(8) NOT NULL, 
+  id_minot mediumint(8) NOT NULL,
   nom_formation varchar(256) COLLATE utf8_swedish_ci NOT NULL,
   annee_etude tinyint(3) unsigned NOT NULL,
   parfum varchar(40) COLLATE utf8_swedish_ci NOT NULL,
@@ -74,5 +74,21 @@ CREATE TABLE IF NOT EXISTS minoterie_utilisateur (
   KEY login (login)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
--- pain_cours.id_section nouveau > minoterie_intervention.section nouveau 
+-- pain_cours.id_section nouveau > minoterie_intervention.section nouveau
 ALTER TABLE  `minoterie_intervention` ADD  `section` INT( 3 ) UNSIGNED NOT NULL DEFAULT  '0' AFTER  `code_geisha`;
+
+
+---- Rev > 116
+---- modifs tables minoterie
+
+
+--- une colonne dit s'il s'agit d'un minot definitif
+ALTER TABLE  `minoterie_minot` ADD  `definitif` SMALLINT( 1 ) UNSIGNED NOT NULL DEFAULT  '0' AFTER  `traitee`
+
+-- on aura besoin de stocker des parametres de config (dans pain ce
+-- sera pareil)
+CREATE TABLE  `minot`.`minoterie_config` (
+`configuration` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+`valeur` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+PRIMARY KEY (  `configuration` )
+) ENGINE = MYISAM ;
