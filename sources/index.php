@@ -56,10 +56,10 @@ function index_php() {
     if (NULL != $user) {
 	echo "<p>Vous pouvez accéder à :<ul>";
 	if ($user["su"]) {
-	    echo "<li>la <a href=\"lecture.php\">liste des déclarations</a> de la minoterie</li>";
 	    echo "<li>l'<a href=\"admin.php\">administration</a> de la minoterie</li>";
 	}
 	if (NULL != $user["departements"]) {
+        echo "<li>la <a href=\"lecture.php\">liste des déclarations</a> de la minoterie</li>";
 	    echo "<li>l'<a href=\"importer.php\">importation de déclarations</a> depuis le pain du département ";
 	    echo '<ul>';
 	    $first = true;
