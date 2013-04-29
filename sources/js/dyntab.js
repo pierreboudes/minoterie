@@ -1826,7 +1826,13 @@ function basculerMinot(e, boutons_annot, traitee) {
 	                      var n = o.length;
 	                      var i = 0;
                               while ((i < n) && (1 == o[i]["definitif"])) i += 1;
-                              if (i == n) return; /* pas de diff a faire */
+                              if (i == n) { /* pas de diff a faire, on colorie juste en bleu les interventions */
+                                n = interventions.length;
+                                for (i = 0; i < n; i += 1) {
+                                  $('#intervention_'+interventions[i]["id_intervention"]).addClass("diffnew");
+                                }
+                               return; /* <--- ON QUITTE ICI */
+                              }
                               /* recuperer ses interventions */
                               getjson("json_get.php",
                                       {type: "intervention",
