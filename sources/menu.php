@@ -41,11 +41,14 @@ function ig_formselectannee($annee)
 }
 
 function ig_montreretapedeclarations() {
+    global $link;
+
+    $date = get_configuration("DATE_ETAPE");
     if (declarationsdefinitives()) {
-        echo '<div class="montreetape" id="declarationsdefinitives">[Déclarations définitives]</div>';
+        echo '<div class="montreetape" id="declarationsdefinitives"><b>'.$date.'</b><hr>Déclarations définitives</div>';
     }
     else {
-        echo '<div class="montreetape" id="declarationsprevisionnelles">[Déclarations prévisionnelles]</div>';
+        echo '<div class="montreetape" id="declarationsprevisionnelles"><b>'.$date.'</b><hr>Déclarations prévisionnelles</div>';
     }
 }
 
@@ -57,8 +60,8 @@ function ig_affichermenu() {
         if (NULL != $user["departements"]) {
             echo '<li><a href="importer.php">importer des déclarations</a></li>';
         }
+        echo '<li><a href="lecture.php">toutes les déclarations</a></li>';
         if (1 == $user["su"]) {
-            echo '<li><a href="lecture.php">toutes les déclarations</a></li>';
             echo '<li><a href="admin.php">admin</a></li>';
         }
     }

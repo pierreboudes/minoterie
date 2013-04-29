@@ -138,7 +138,7 @@ function cell() {
     }
 }
 
-
+/* constructeur de cellule oui/non */
 function checkcell() {
     this.name ="checkcell";
     this.mutable = true;
@@ -205,6 +205,7 @@ function checkcell() {
 }
 
 
+/* constructeur de cellule avec texte enrichi (pour le moment uniquement urls->liens) */
 function richcell() {
     this.setval = function (c, o) {
 	c.removeClass("edit");
@@ -225,6 +226,7 @@ function richcell() {
 
 richcell.prototype = new cell();
 
+/* constructeur de cellule numérique avec gestion de la virgule à l'édition */
 function numcell() {
     this.canbenull = false;
     this.edit = function(c) {
@@ -249,6 +251,7 @@ function numcell() {
 }
 numcell.prototype = new cell();
 
+/* constructeur de cellule de date avec calendrier à l'édition */
 function datecell() {
     this.setval = function (c, o) {
 	var isos = o[this.name];
@@ -448,13 +451,12 @@ colorlinecell.prototype = new immutcell();
 
 
 
-
-
 /* constructeur du composite enseignant */
 function enseignant () {
     this.name = "enseignant";
     this.setval = function (c,o) {
-	c.html(o["prenom"]+" "+o["nom"]);
+	c.html(o["prenom"]+" "+o["nom"]
+              +'<span class="hiddenvalue">'+o["id_enseignant"]+'</span>');
 /*	c.find("a.enseignant").click(function(){window.open(this.href);return false;}); */
     }
 }
@@ -527,6 +529,10 @@ function intitule_formation() {
     }
 }
 intitule_formation.prototype = new immutcell();
+
+/*
+ * fonctions auxilliaires pour les cellules affichant des totaux
+ */
 
 function total_complexe(o, nom, prefixe) {
     var s;
@@ -1059,6 +1065,32 @@ function movedown(e) {
 }
 
 
+/* constructeur du composite etape */
+function etape() {
+    this.name = "etape";
+    this.setval = function (c,o) {
+	var s = "";
+	if  (1 == o["definitif"]) {
+           s = "bilan";
+        } else {
+          s = "prévision";
+        }
+         /* en cas de modification, voir aussi index.php */
+	c.html(s+'<span class="hiddenvalue">'+o["definitif"]+'</span>');
+    }
+}
+etape.prototype = new immutcell();
+
+/* constructeur du composite departement */
+function departement() {
+    this.name = "departement";
+    this.setval = function (c,o) {
+	c.html(o["departement"]+'<span class="hiddenvalue">'+o["id_departement"]+'</span>');
+    }
+}
+departement.prototype = new immutcell();
+
+
 /* objet ligne de tableau */
 function ligne() {
     /* pain_enseignant
@@ -1260,6 +1292,7 @@ function ligne() {
     this.selection = new checkcell();
     this.selection.guard = "traitee";
     this.selection.name = "selection";
+    this.etape = new etape();
     this.color_line = new colorlinecell();
     this.color_cm = new colorcell();
     this.color_cm.name = "cm";
@@ -1281,8 +1314,7 @@ function ligne() {
     this.color_semestre.name = "semestre";
     this.nom_departement = new immutcell();
     this.nom_departement.name = "nom_departement";
-    this.departement = new immutcell();
-    this.departement.name = "departement";
+    this.departement = new departement();
     this.enseignant = new enseignant();
     this.derniere_declaration = new immutcell();
     this.derniere_declaration.name = "modification_minot";
@@ -1721,12 +1753,21 @@ function basculerMinot(e, boutons_annot, traitee) {
     var colspan = largeurligne(bascule);
     $('#'+sid).effect('highlight',{},800,function () {});
     $('#'+sid).after('<tr class="conteneur" id="trtableinterventions'+id+'"><td class="conteneur" colspan="'+colspan+'"><table class="interventions" id="tableinterventions_'+id+'"><tbody></tbody></table></td></tr>');
-    /* charger les interventions */
+
+    /* parametres supplementaires, a prendre dans la ligne  */
+    var definitif;
+    var id_enseignant;
+    var id_departement;
+    definitif = ("1" == $('#'+sid+' > td.etape span.hiddenvalue').text());
+    id_enseignant = parseFloat($('#'+sid+' > td.enseignant span.hiddenvalue').text());
+    id_departement = parseFloat($('#'+sid+' > td.departement span.hiddenvalue').text());
+
+    /* charger les interventions et les decorations */
     appendList({type: "intervention",
 		id_parent: id
 	       },
 	       $('#tableinterventions_'+id+' > tbody'),
-	       function(){
+	       function(interventions){
 		   /* effet */
 		   $('#tableinterventions_'+id+' tr.intervention').fadeIn("slow");
 		   /* ajouter les totaux */
@@ -1764,13 +1805,100 @@ function basculerMinot(e, boutons_annot, traitee) {
 		   if (boutons && traitee) {
 		       buttonbox.html("Annotation impossible, la déclaration a déjà été traitée.");
 		   }
-		   /* charger les annotations */
-		   getjson("json_get.php", {type: "annotation", id_parent: id}, function (o) {
-		       if (0 < o.length) {
-			   appliquerAnnotation(id, o[0]);
-		       }
-		       return false;
-		   });
+                   if (!definitif) {
+		     /* charger les annotations */
+		     getjson("json_get.php", {type: "annotation", id_parent: id},
+                             function (o) {
+		               if (0 < o.length) {
+		                 appliquerAnnotation(id, o[0]);
+		               }
+		               return false;
+		             });
+                   } else {
+                    /* afficher le diff avec le previsionnel */
+                    getjson("json_get.php",
+                            {type: "minot",
+                             id_parent: "inutile",
+                             id_enseignant: id_enseignant,
+                             id_departement: id_departement},
+                            function (o) {/* o est la liste des minots de cet enseignant dans ce departement */
+                              /*trouver le dernier previsionnel */
+	                      var n = o.length;
+	                      var i = 0;
+                              while ((i < n) && (1 == o[i]["definitif"])) i += 1;
+                              if (i == n) return; /* pas de diff a faire */
+                              /* recuperer ses interventions */
+                              getjson("json_get.php",
+                                      {type: "intervention",
+                                       id_parent: o[i]["id_minot"]},
+                                      function (o) {
+                                        /* annoter */
+                                        var n = interventions.length;
+                                        var m = o.length;
+                                        var i,j,k, p;
+                                        /* tableaux d'id_intervention */
+                                        var nouvelles = new Array(); /* uniquement nouvelles interventions */
+                                        var desuetes = new Array(); /* uniquement anciennes interventions */
+                                        var recyclees = new Array(); /* interventions du previsionnel reutilises */
+                                        /* champs pour les comparaisons */
+                                        var champs = ["semestre", "code_geisha",
+                                                      "cm", "td", "tp", "alt"];
+                                        for (i = 0; i < n; i += 1) {/* Pour chaque intervention actuelle */
+                                          /* Determiner si l'intervention est nouvelle
+                                           * ou si elle recycle une ancienne intervention o[j] */
+                                          var estnouvelle = true;
+                                          j = 0;
+                                          while ((j < m) && estnouvelle) {
+                                            if (o[j]["id_cours"] == interventions[i]["id_cours"]) {
+                                              estnouvelle = false;
+                                            } else {
+                                              j += 1;
+                                            }
+                                          }
+
+                                          if (estnouvelle) {
+                                            nouvelles.push(interventions[i]["id_intervention"]);
+                                          } else {
+                                            /* se souvenir que o[j] est recyclee (ne sera pas desuete) */
+                                              o[j]["id_intervention"] = 0;
+                                            /* comparer les deux interventions i et j sur chaque champs */
+                                            p = champs.length;
+                                            var label;
+                                            var sid = "intervention_"+interventions[i]["id_intervention"];
+                                            for (k = 0; k < p; k += 1) {
+                                              label = champs[k];
+                                              if (interventions[i][label] != o[j][label]) {
+                                                /* afficher les différences sur ce champs */
+                                                var td = $('#'+sid+' > td.color_'+label);
+                                                var ancienne = o[j][label];
+                                                if (ancienne == null) ancienne = 0;
+                                                td.css("background-color", "yellow");
+                                                td.append('<div class="diffoldvalue">'
+                                                         +'ancien: ' + ancienne
+                                                         + '</div>');
+                                              }
+                                            }
+                                            recyclees.push(j);
+                                          }
+                                        }
+                                        /* afficher différement les nouvelles interventions */
+                                        p = nouvelles.length;
+                                        for (i = 0; i < p; i += 1) {
+                                          $('#intervention_'+nouvelles[i]).addClass("diffnew");
+                                        }
+                                        /* ajouter les anciennes interventions devenues désuetes */
+                                        var trsum = $('#sumintervention'+id).prev();
+                                        var legendeth = $('#legendeintervention'+id).children('th');
+                                        for (j = m - 1; j >= 0; j -= 1) {
+                                          if (0 < o[j]["id_intervention"]) {
+                                            appendItem("intervention", trsum, o[j], legendeth);
+                                            $("#intervention_"+o[j]["id_intervention"]).addClass("diffremoved");
+                                          }
+                                        }
+                                      }
+                                     );
+                            });
+                 }
 	       });
     return false;
 }
@@ -2784,7 +2912,7 @@ function appendList(data, body, do_it_last) {
 	delete data.prepare_data;
     }
     getjson(url, data, function (o) {
-	    o = prepare_data(o);
+        o = prepare_data(o);
 	var n = o.length;
 	var i = 0;
 	for (i = n - 1; i >= 0; i--) {

@@ -1,5 +1,5 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -29,7 +29,7 @@ function index_php() {
     global $link;
     global $user;
     $ens = minoterie_getens();
-    $login = phpCAS::getUser(); 
+    $login = phpCAS::getUser();
     if ((NULL != $user) && (NULL != $user["id_utilisateur"])) {
 	echo '<div id="user" class="hiddenvalue">';
 	echo '<span class="id">'.$user["id_utilisateur"].'</span>';
@@ -77,12 +77,14 @@ function index_php() {
     echo "</div></center>"; /* fin infobox */
 
     foreach ($ens as $dpt) {
+	$id_e = $dpt["id_enseignant"];
 	$id_d = $dpt["id_departement"];
 	$id_m = $dpt["id_minot"];
 	$nom_d = $dpt["nom_departement"];
 	$url_d = $dpt["url_pain"];
 	$modif = $dpt["modification"];
 	$traitee = $dpt["traitee"];
+    $definitif = $dpt["definitif"];
 
 	echo "<center><div id=\"departement_$id_d\" class=\"departement\">
               <table class=\"departement\">
@@ -92,12 +94,21 @@ function index_php() {
               </td>
               <td class=\"nom_departement\">Déclaration transmise par le département $nom_d (depuis <a href=\"$url_d\">pain</a>)</td>
               <td class=\"modification\">$modif</td>";
+    echo "<td class=\"etape\">";
+	if ($definitif) {
+        echo "bilan";
+	} else {
+	    echo "prévisionnel";
+	}
+    echo "<span class=\"hiddenvalue\">$definitif</span></td>";
 	if ($traitee) {
 	    echo "<td class=\"traite\"><div class=\"traiteOn\">déclaration traitée</div></td>";
 	} else {
-	    echo "<td class=\"traite\"></td>";
+	    echo "<td class=\"traite\" style=\"display:none\"></td>";
 	}
-	echo "</tr></tbody></table><div></center>"; 
+    echo "<td class=\"enseignant\" style=\"display:none\"><span class=\"hiddenvalue\">$id_e</span></td>";
+    echo "<td class=\"departement\" style=\"display:none\"><span class=\"hiddenvalue\">$id_d</span></td>";
+	echo "</tr></tbody></table><div></center>";
     }
 }
 

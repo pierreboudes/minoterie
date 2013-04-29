@@ -75,6 +75,7 @@ function json_get_php($annee, $readtype) {
                     traitee,
                     definitif,
                     nom_departement as departement,
+                    u.id_departement,
                     w.id_annotation,
                     w.modification as modification_annotation
                     FROM  ((SELECT id_enseignant, id_departement, max(modification) as modification
@@ -103,11 +104,12 @@ function json_get_php($annee, $readtype) {
             }
             $requete .= " AND u.id_minot = $id ";
         }
-        if ($type == "declens") $requete .= " ORDER BY u.nom, u.prenom, u.id_departement ;";
+        $requete .= " ORDER BY u.nom, u.prenom, u.id_departement ;";
     } else {
         errmsg("erreur de script (type inconnu)");
     }
 
+    /* Traitement de la requete */
     if (isset($_GET["id_parent"]) || isset($_POST["id_parent"])) {
         if (isset($npar)) {
             $filtre = " ";
@@ -125,6 +127,13 @@ function json_get_php($annee, $readtype) {
             }
             $filtre = " AND `$par` = $id_par ";
         }
+
+        if ( ( ($type == "intervention") || ($type == "annotation") )
+             && ! peutliredeclarationsduminot($id_par)) {
+            errmsg("opération non autorisée");
+        }
+
+
         if (!isset($requete)) {
             $requete = "SELECT
                       minoterie_$type.*,

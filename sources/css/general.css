@@ -88,7 +88,7 @@ table.nature td.inact {
     padding-bottom: 4px;
     padding-right: 5pt;
     padding-left: 5pt;
-    border-style: solid; 
+    border-style: solid;
     border-width: 3px;
     border-top: 0px;
 }
@@ -101,7 +101,7 @@ li#menu-chercher {
 
 #search-highlight {
     width: 80px;
-    display: inline;    
+    display: inline;
 }
 #search-highlight input {
     width: auto;
@@ -129,7 +129,7 @@ div.infobox {
 /* tables */
 table {
     border: 0px;
-    border-collapse:collapse; 
+    border-collapse:collapse;
 }
 
 select, input {
@@ -143,7 +143,7 @@ th {
     padding-top:5px;
     padding-bottom:5px;
     padding-left: 2px;
-    padding-right: 2px;    
+    padding-right: 2px;
 }
 
 td {
@@ -154,36 +154,36 @@ td {
     padding-top:5px;
     padding-bottom:5px;
     padding-left: 2px;
-    padding-right: 2px; 
+    padding-right: 2px;
     text-align:left;
 }
 
 table.cours {
     border-width: 1px;
     border-style: solid;
-    border-collapse:collapse; 
+    border-collapse:collapse;
     margin:auto;
-    margin-top:-2px;    
+    margin-top:-2px;
 }
 
 table.super, table.vuetags, table.vuecollections {
     border-width: 2px;
     border-style: solid;
-    border-collapse:collapse; 
+    border-collapse:collapse;
     margin:auto;
 }
 
 table.interventions,  table.service {
     border-width: 2px;
     border-style: solid;
-    border-collapse:collapse; 
+    border-collapse:collapse;
     margin:auto;
 }
 
 table.stat,table.annuaire {
     border-width: 2px;
     border-style: solid;
-    border-collapse: collapse; 
+    border-collapse: collapse;
     margin: auto;
     margin-top: 10px;
 }
@@ -191,28 +191,28 @@ table.stat,table.annuaire {
 table.longchoix, table.potentiel, table.responsabilite {
     border-width: 1px;
     border-style: solid;
-    border-collapse:collapse; 
+    border-collapse:collapse;
     margin:auto;
 }
 
 
 table.stat th {
-    font-family: monospace;    
+    font-family: monospace;
     text-align:right;
 }
 
 table.stat td {
-    font-family: monospace;    
+    font-family: monospace;
     text-align:right;
 }
 
 tr.formation td {
     padding-top: 10px;
-}    
+}
 
 tr.super {
     padding-top: 10px;
-    font-weight: bolder;    
+    font-weight: bolder;
     color: white;
 }
 
@@ -227,7 +227,7 @@ tr.sousformations > td {
 table.categorie, table.enseignants {
     border-style: solid;
     border-width: 1px;
-    border-collapse:collapse; 
+    border-collapse:collapse;
     margin:auto;
 }
 
@@ -236,7 +236,7 @@ table.tranches, table.services {
     border-width: 1px;
     border-bottom-width: 2px;
     border-left-width: 1px;
-    border-right-width: 0px;    
+    border-right-width: 0px;
     border-collapse:collapse;
     margin-left: auto;
     margin-top: -1px;
@@ -257,8 +257,8 @@ table.choix {
     border-width: 1px;
     border-bottom-width: 2px;
     border-left-width: 0px;
-    border-right-width: 1px;    
-    border-left:0px;    
+    border-right-width: 1px;
+    border-left:0px;
     border-collapse:collapse;
     margin-right: auto;
     margin-left: -1px;
@@ -267,7 +267,7 @@ table.choix {
 
 table.choix th {
     text-align: center;
-}  
+}
 
 
 /* DIMENSIONS */
@@ -288,7 +288,7 @@ table.tableformations {
 }
 
 /* autres dimensions */
-table.categorie, table.super, table.vuetags, table.vuecollections {
+table.departement, table.categorie, table.super, table.vuetags, table.vuecollections {
     width:620px;
     max-width:620px;
 }
@@ -333,7 +333,7 @@ table.cours {
 }
 
 tr.super > .intitule, tr.sformation > .nom, tr.formation > .intitule {
-    width: 150px;    
+    width: 150px;
     border-left: 0px;
 }
 
@@ -347,14 +347,14 @@ tr.super > .enseignant,  tr.sformation > .enseignant,  tr.formation > .enseignan
 }
 
 tr.formation > .enseignant {
-    border-right: 0px;    
+    border-right: 0px;
 }
 
-tr.super > .totaux, tr.sformation > .totaux, tr.formation > .totaux, 
+tr.super > .totaux, tr.sformation > .totaux, tr.formation > .totaux,
 tr.super > .totaux_loader, tr.sformation > .totaux_loader, tr.formation > .totaux_loader {
     min-width: 500px;
     width: 500px;
-    border-right: 0px;    
+    border-right: 0px;
     border-left: 0px;
 }
 
@@ -366,7 +366,7 @@ td.nopadding {
     min-width: 140px;
 }
 
-.cm, .td, .tp, .alt, .groupe, .htd, .inscrits, .presents, .tirage, 
+.cm, .td, .tp, .alt, .groupe, .htd, .inscrits, .presents, .tirage,
 .choix_htd, .tranche_htd {
     min-width:30px;
     max-width:60px;
@@ -378,11 +378,11 @@ td.nopadding {
 
 .semestre {
    max-width: 80px;
-} 
+}
 
 .credits {
    width: 80px;
-} 
+}
 
 .code_geisha {
     width:70px;
@@ -391,7 +391,7 @@ td.nopadding {
 .laction {
     width: 0px;
     padding-left: 0px;
-    padding-right: 0px; 
+    padding-right: 0px;
 }
 
 .modification {
@@ -456,7 +456,7 @@ td.tranches, td.services {
 /******* toutes les bascules *******/
 
 div.basculeOff, div.basculeOn {
-    float:left; 
+    float:left;
     cursor: pointer;
     width: 20px;
     height: 20px;
@@ -503,7 +503,7 @@ td.laction > div.basculeOff, td.laction > div.basculeOn {
 }
 
 .globalHistoOn, .globalHistoOff:hover {
-    background-image: url(img/touthisto1.png);    
+    background-image: url(img/touthisto1.png);
 }
 
 .histoOn, .histoOff {
@@ -520,7 +520,7 @@ td.laction > div.basculeOff, td.laction > div.basculeOn {
 }
 
 .histoOn, .histoOff:hover {
-    background-image: url(img/histo1.png);    
+    background-image: url(img/histo1.png);
 }
 
 .logOn, .logOff {
@@ -554,13 +554,13 @@ tr.imgcours, td.imgcours, div.imgcours {
     height: 0px;
 }
 
-div.imgcours {    
+div.imgcours {
     float: left;
-    background-repeat: no-repeat;    
+    background-repeat: no-repeat;
 }
 
-div.imgcours img.imgbarre {     
-    opacity: 0.7; 
+div.imgcours img.imgbarre {
+    opacity: 0.7;
     position: absolute;
 }
 
@@ -568,16 +568,16 @@ tr.imgformation, td.imgformation, div.imgformation {
     padding: 0px;
     border-width: 0px;
     margin: 0px;
-    margin-top: -1px; 
+    margin-top: -1px;
     height: 0px;
 }
 
-div.imgformation {    
+div.imgformation {
     float: left;
-    background-repeat: no-repeat;    
+    background-repeat: no-repeat;
 }
 
-div.imgformation img.imgbarre {     
+div.imgformation img.imgbarre {
     opacity: 0.9;
     position: absolute;
 }
@@ -594,7 +594,7 @@ div.tip {
 
 a.enseignant {
     text-decoration: none;
-    color: inherit;    
+    color: inherit;
 }
 
 a.enseignant:hover {
@@ -604,7 +604,7 @@ a.enseignant:hover {
 /* NE FONCTIONNE PAS
 a {
     max-width: 50px;
-    overflow: hidden; 
+    overflow: hidden;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
 }
@@ -724,13 +724,13 @@ div.lstatens1, div.rstatens1 {
 }
 
 .statens .td {
-        opacity: .80; 
+        opacity: .80;
 }
 .statens .tp {
-        opacity: .60; 
+        opacity: .60;
 }
 .statens .alt {
-        opacity: .40; 
+        opacity: .40;
 }
 
 .statens .ccm {
@@ -763,9 +763,9 @@ div.lstatens1, div.rstatens1 {
     height: 100%;
 }
 .historique div.nav {
-    float: left;    
+    float: left;
     clear: both;
-    width: 50px;    
+    width: 50px;
     text-align: right;
     margin-right: 2px;
     border-width: 0px;
@@ -855,7 +855,7 @@ div.okl {
 /* a fusionner avec la section sur les cellules TODO */
 
 textarea {
-    width: 95%;    
+    width: 95%;
     margin-right: 4px;
     height: 90%;
     border: none;
@@ -884,7 +884,7 @@ ul.menu li {
 
 ul.menu li.inv {
     font-weight: normal;
-    font-style: italic;    
+    font-style: italic;
 }
 
 td.action, th.action {
@@ -926,19 +926,19 @@ th.laction > div.palette, td.laction > div.palette {
 
 tr.choix > th.action > div.palette, tr.choix > td.action > div.palette {
     float: left;
-    height: 24px; 
+    height: 24px;
     margin-left: -64px;
 }
 
 td.action > div.removel {
-    float:right; 
+    float:right;
     margin-right: -39px;
     width: 29px;
     height: 24px;
 }
 
 tr.choix > td.action > div.removel {
-    float: left; 
+    float: left;
     margin-left: -39px;
 }
 
@@ -1012,7 +1012,7 @@ div.bouton-panier {
 
 div.panier-conteneur {
     min-width: 250px;
-    margin-right: 50px; 
+    margin-right: 50px;
 }
 
 
@@ -1084,7 +1084,7 @@ td.inactive {
       1px -1px 0 #FFF,
       -1px 1px 0 #FFF,
        1px 1px 0 #FFF;
-//  text-transform: uppercase; 
+//  text-transform: uppercase;
 //    color: grey;
     color: darkgrey;
     font-size: 1.4em;
@@ -1097,7 +1097,7 @@ td.tags, td.collections {
 span.tag, span.collection  {
 background-color: lightgrey;
   -moz-border-radius: 9px;
-  border-radius: 9px; 
+  border-radius: 9px;
   padding: 2px 4px;
   margin: 2px;
 }
@@ -1113,7 +1113,7 @@ cursor: pointer;
 display: inline-block;
 background-color: transparent;
 margin-right: -8px;
-margin-left: -4px; 
+margin-left: -4px;
 overflow: visible;
 padding: 0;
 border: 0;
@@ -1122,7 +1122,7 @@ text-decoration: none !important;
 .button-ajouter_tag, .button-envoyer_tag,
 .button-ajouter_collection, .button-envoyer_collection, {
 margin-right: -4px;
-margin-left: -3px; 
+margin-left: -3px;
 }
 
 
@@ -1172,7 +1172,7 @@ div.yesno {
  cursor: pointer;
  width: 30px;
   -moz-border-radius: 9px;
-  border-radius: 9px; 
+  border-radius: 9px;
   padding: 2px 10px;
   margin: 2px;
 }
@@ -1237,4 +1237,44 @@ li.departement:hover {
 #dialog_importer .traitee {
     font-weight: bold;
     border-bottom: 2px red solid;
+}
+
+/* Montrer à quelle étape nous en sommes */
+.montreetape{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    z-index: 9999;
+    max-width: 100px;
+    -webkit-box-shadow: 0 0 5px #aaa;
+    box-shadow: 0 0 5px #aaa;
+    border: 2px #bbb solid;
+}
+
+/* Les diffs */
+.diffnew {
+    background-color: lightblue;
+}
+
+.diffremoved {
+    background-color: #DDD;
+    text-decoration: line-through;
+}
+
+.diffoldvalue {
+    font-family: monospace;
+    color: #DDD;
+    background-color:#333;
+    font-size: 0.9em;
+    font-weight: bold;
+    position: absolute;
+    border:  thin #333 solid;
+    padding-left: 2px;
+    padding-right: 2px;
+    display: none;
+}
+
+td:hover >.diffoldvalue {
+    display: block;
 }

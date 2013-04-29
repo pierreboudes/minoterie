@@ -104,7 +104,7 @@ function getjsonaofaa($s) {
 		if (!is_string($cell)) {
 		    $o[$i][$name] = "DEFAULT";
 		} else {
-		    $o[$i][$name] = "'".trim(htmlspecialchars($link->real_escape_string(stripslashes($cell)), ENT_QUOTES))."'";
+		    $o[$i][$name] = "'".trim($link->real_escape_string(stripslashes($cell)))."'";
 		}
 	    }
 	}

@@ -74,7 +74,7 @@ function minoterie_getuser() {
 function minoterie_getens() {
     global $link;
     $login = phpCAS::getUser();
-    $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee,
+    $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee, definitif,
                       minoterie_departement.*, nom, prenom
                  FROM ((SELECT id_enseignant, id_departement, max(modification) as modification
                                    FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant, id_departement) as t

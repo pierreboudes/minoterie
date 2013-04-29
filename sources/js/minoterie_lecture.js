@@ -1,5 +1,5 @@
 /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009 Pierre Boudes, département d'informatique de l'institut Galilée.
  *
@@ -23,13 +23,15 @@
 
 
 $(document).ready(function(){
-    $('#skel').fadeOut(0);
-    $('#vuecourante').append('<table class="super" id="departements0"><tbody></tbody></table>');
-    appendList({type: "departement", id_parent: 0},$("#departements0"),function (o) { 
+  $('#skel').fadeOut(0);
+  $('#vuecourante').append('<table class="super" id="departements0"><tbody></tbody></table>');
+  appendList({type: "departement", id_parent: 0},$("#departements0"),function (o) {
 	/* rien a ajouter */
-    });
+  });
+  if (superuser()) {
     $('#vuecourante').append('<table class="super" id="enseignants0"><tbody></tbody></table>');
-    appendList({type: "declens", id_parent: 0},$("#enseignants0"),function (o) { 
-	/* rien a ajouter */
+    appendList({type: "declens", id_parent: 0},$("#enseignants0"),function (o) {
+      /* rien a ajouter */
     });
+  }
 });
