@@ -21,5 +21,5 @@ INSERT INTO `minoterie_utilisateur` (`login`,`prenom`, `nom`, `id_departement`, 
 -- Rev > 116
 -- Pour dire si les déclarations trasnmises sont prévisionnelles ou
 -- définitives
-INSERT INTO `minot`.`minoterie_config` (`configuration`, `valeur`) VALUES ('ETAPE_DECLARATIONS', 'definitives');
-INSERT INTO `minot`.`minoterie_config` (`configuration`, `valeur`) VALUES ('DATE_ETAPE', 'Mai 2013');
+INSERT INTO `minoterie_config` (`configuration`, `valeur`) VALUES ('ETAPE_DECLARATIONS', 'definitives');
+INSERT INTO `minoterie_config` (`configuration`, `valeur`) VALUES ('DATE_ETAPE', 'Mai 2013');

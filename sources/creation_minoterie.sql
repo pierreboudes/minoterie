@@ -87,7 +87,7 @@ ALTER TABLE  `minoterie_minot` ADD  `definitif` SMALLINT( 1 ) UNSIGNED NOT NULL 
 
 -- on aura besoin de stocker des parametres de config (dans pain ce
 -- sera pareil)
-CREATE TABLE  `minot`.`minoterie_config` (
+CREATE TABLE  `minoterie_config` (
 `configuration` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 `valeur` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 PRIMARY KEY (  `configuration` )
