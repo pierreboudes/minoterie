@@ -425,6 +425,10 @@ td.service_annuel, td.service_reel  {
     width: 140px;
 }
 
+.declarer {
+    width: 120px;
+}
+
 .type_conversion {
     width: 100px;
 }

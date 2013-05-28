@@ -1214,6 +1214,9 @@ function ligne() {
     /* remarque */
     this.remarque = new cell();
     this.remarque.name = "remarque";
+    /* declarer */
+    this.declarer = new immutcell();
+    this.declarer.name = "declarer";
     /* htd */
     this.htd = new sunumcell();
     this.htd.name = "htd";
