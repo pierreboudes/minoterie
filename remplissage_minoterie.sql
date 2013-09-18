@@ -23,3 +23,11 @@ INSERT INTO `minoterie_utilisateur` (`login`,`prenom`, `nom`, `id_departement`, 
 -- définitives
 INSERT INTO `minoterie_config` (`configuration`, `valeur`) VALUES ('ETAPE_DECLARATIONS', 'definitives');
 INSERT INTO `minoterie_config` (`configuration`, `valeur`) VALUES ('DATE_ETAPE', 'Mai 2013');
+
+
+--- sous git > e7179ccf50b39ee5d339580a817b761714013cbd
+INSERT INTO `minoterie_config` (`configuration`, `valeur`, `aide`) VALUES ('ANNEE_COURANTE', '2013', 'Incrire le debut de l''annee en cours, par exemple inscire 2013 pour l''annee 2013-2014');
+UPDATE  `commun`.`minoterie_config` SET  `valeur` =  'previsionnelles',
+`aide` =  'inscrire definitives (sans accent) si le traitement actuel concerne les declarations definitives, ou n''importe quoi d''autres sinon') WHERE  `minoterie_config`.`configuration` =  'ETAPE_DECLARATIONS';
+UPDATE  `commun`.`minoterie_config` SET  `valeur` =  'Septembre 2013',
+`aide` =  'ce texte sera affiche aux utilisateurs (sans autre effet)') WHERE  `minoterie_config`.`configuration` =  'DATE_ETAPE';

@@ -92,3 +92,7 @@ CREATE TABLE  `minoterie_config` (
 `valeur` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 PRIMARY KEY (  `configuration` )
 ) ENGINE = MYISAM ;
+
+
+--- sous git > e7179ccf50b39ee5d339580a817b761714013cbd
+ALTER TABLE  `minoterie_config` ADD  `aide` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT  ''
