@@ -67,7 +67,8 @@ function json_importer_declarations_php() {
 	    $id_minot = $link->insert_id;
 	}
 	$val[] = " (".$id_minot.", ".$ligne["nom_formation"].", ".$ligne["annee_etude"].", ".$ligne["parfum"].", ".
-	    $ligne["id_cours"].", ".$ligne["semestre"].", ".$ligne["nom_cours"].", ".$ligne["code_geisha"].", ".
+	    $ligne["id_cours"].", ".$ligne["semestre"].", ".$ligne["nom_cours"].", ".$ligne["code_ue"]", ".
+        /* todo: $ligne["code_etape"].", ". */
 	    $ligne["section"].", ".$ligne["cm"].", ".$ligne["td"].", ".$ligne["tp"].", ".$ligne["alt"].", ".$ligne["declarer"].")";
     }
     if (0 < count($val)) {
