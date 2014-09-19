@@ -1,0 +1,7 @@
+#ignore files with a password
+iconnect.php
+#ignore text-editor backups
+*~
+#ignor logs
+minoterielogs/*
+!minoterielogs/.gitignore

@@ -22,7 +22,7 @@
 
 require_once('authentication.php');
 require_once('utils.php');
-authrequired();
+// authrequired(); est utilise par authentification, ne peut donc pas necessiter l'auth
 
 function get_configuration($chaine) {
     global $link;

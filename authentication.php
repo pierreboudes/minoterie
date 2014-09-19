@@ -27,12 +27,16 @@ phpCAS::client(CAS_VERSION_2_0,'cas.univ-paris13.fr',443,'/cas/',true);
 phpCAS::setNoCasServerValidation();
 
 require_once('inc_connect.php');
+require_once('inc_config.php');
 
 date_default_timezone_set('Europe/Paris'); /* pour strtotime() */
 
-/**  changement d'annee le 1er septembre  */
+/**  changement d'annee dans la table de configuration  */
 function default_year() {
-    $an = date('Y', strtotime('-8 month'));
+    $an = intval(get_configuration("DATE_ETAPE"));
+    if ($an <= 0) {
+      $an = date('Y', strtotime('-8 month'));
+    }
     return $an;
 }
 
