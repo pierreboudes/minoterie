@@ -1,5 +1,5 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -19,39 +19,45 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('authentication.php'); 
+require_once('authentication.php');
 $user = authentication();
 require_once("inc_connect.php");
 require_once("utils.php");
 require_once("inc_functions.php");
 
 
-/** réalise l'insertion d'un nouvel élément fourni par le contexte HTTP/GET 
+/** réalise l'insertion d'un nouvel élément fourni par le contexte HTTP/GET
     et renvoie son id.
  */
 function json_new_php() {
     global $link;
     global $user;
     $champs = array(
-	"utilisateur" => array(
-	    "login", "id_departement", "su"
+        "utilisateur" => array(
+            "login", "id_departement", "su"
 	    ),
-	"departement" => array(
-	    "nom_departement", "url_pain"
+        "departement" => array(
+            "nom_departement", "url_pain"
 	    ),
-	"annotation" => array(
-	    "id_minot", "jsannot", "commentaire", "complete"
-	    )
+        "annotation" => array(
+            "id_minot", "jsannot", "commentaire", "complete"
+        ),
+        "signature" => array(
+            "id_minot", "nom", "prenom", "login"
+        )
 	);
 
 if (NULL != ($readtype = getclean("type"))) {
-    if ($readtype == "utilisateur") {	
-	$type = "utilisateur";
-    } else if ($readtype == "departement") {	
-	$type = "departement";
-    } else if ($readtype == "annotation") {	
-	$type = "annotation";
-	$par = "id_minot";
+    if ($readtype == "utilisateur") {
+        $type = "utilisateur";
+    } else if ($readtype == "departement") {
+        $type = "departement";
+    } else if ($readtype == "annotation") {
+        $type = "annotation";
+        $par = "id_minot";
+    } else if ($readtype == "signature") {
+        $type = "signature";
+        $par = "id_minot";
     } else {
 	errmsg("type indéfini");
     }
@@ -60,7 +66,7 @@ if (NULL != ($readtype = getclean("type"))) {
 }
 
 if (NULL != ($id_parent = getnumeric("id_parent"))) {
-       
+
     if (!peutediter($type,NULL,$id_parent)) {
 	errmsg("droits insuffisants.");
     }
@@ -68,7 +74,7 @@ if (NULL != ($id_parent = getnumeric("id_parent"))) {
     if (isset($par))  {
 	$set[$par] = $id_parent;
     }
-    
+
     foreach ($champs[$type] as $field) {
 	if (NULL != ($val = getclean($field))) {
 	    $set[$field] = $val;

@@ -1290,6 +1290,8 @@ function ligne() {
     this.declaration.name = "minot";
     this.annotation = new immutmodifcell();
     this.annotation.name = "annotation";
+    this.signee = new immutcheckcell();
+    this.signee.name = "signee";
     this.traitee = new sucheckcell();
     this.traitee.name = "traitee";
     this.selection = new checkcell();
@@ -1751,7 +1753,6 @@ function basculerMinot(e, boutons_prof, traitee) {
     if (bascule.hasClass('basculeOff')) {
 	$('#tableinterventions_'+id).remove();
 	$('#trtableinterventions'+id).remove();
-	$('#trcommentaireinterventions'+id).remove();
 	$('#trbuttonbox'+id).remove();
 	return false;
     }
@@ -1767,7 +1768,7 @@ function basculerMinot(e, boutons_prof, traitee) {
     id_enseignant = parseFloat($('#'+sid+' > td.enseignant span.hiddenvalue').text());
     id_departement = parseFloat($('#'+sid+' > td.departement span.hiddenvalue').text());
 
-    /* charger les interventions et les decorations */
+    /* charger les interventions */
     appendList({type: "intervention",
 		id_parent: id
 	       },
@@ -1791,15 +1792,13 @@ function basculerMinot(e, boutons_prof, traitee) {
 		   line.children('th.nom_cours').addClass('label').html('semestre&nbsp;2');
 		   $('#table'+type+'s_'+id+' > tbody').append(line);
 		   recalculateSums(type, id, "color_");
-		   /* ajouter les commentaires */
+		   /* ajouter les boutons */
 		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
-                   /* annotations  */
-		   var trcommentaire = jQuery('<tr id="trcommentaireinterventions'+id+'"><td colspan='+colspan+' class="commentaire_annotation"><div class="titre_annotation">Commentaires :</div><textarea id="commentaireannot_'+id+'"></textarea><div id="derniere_annot'+id+'" class="titre_annotation">Aucune annotation enregistrée dans cette déclaration</div></td></tr>');
-		   $('#trtableinterventions'+id).after(trbuttonbox).after(trcommentaire);
+		   $('#trtableinterventions'+id).after(trbuttonbox);
 		   var buttonbox = $('#buttonboxannot_'+id);
-		   if (boutons && !traitee) {
-		       var enregistrer = jQuery('<button class="enregistrerannotation">Enregistrer les annotations</button>');
-		       enregistrer.button({
+		   if (boutons && !traitee && !signee) {
+		       var signer = jQuery('<button class="signer">Signer la déclaration</button>');
+		       signer.button({
 			   text: true,
 			   icons: {
 			       primary: "ui-icon-transferthick-e-w"

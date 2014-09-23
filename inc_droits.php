@@ -357,20 +357,20 @@ function peuttransmettredeclarations($ids) {
 
 
 function peutliredeclarationsduminot($id_minot) {
-    global $user;
+    global $login;
     global $link;
     if ($user["su"] == 1) return true;
     $q = "(
            SELECT id_minot FROM minoterie_minot
-           WHERE id_minot = $id_minot
-           AND login LIKE '".$user["login"]."'
+           WHERE id_minot = ".$id_minot."
+           AND login LIKE '".$login."'
           )
           UNION
           (
            SELECT id_minot FROM minoterie_minot, minoterie_utilisateur
-           WHERE id_minot = $id_minot
+           WHERE id_minot = ".$id_minot."
            AND minoterie_utilisateur.id_departement = minoterie_minot.id_departement
-           AND minoterie_utilisateur.login LIKE '".$user["login"]."'
+           AND minoterie_utilisateur.login LIKE '".$login."'
           )";
     $result = $link->query($q) or die("ERREUR peutliredeclarationsduminot()".$link->error);
     if ($result->fetch_array()) {
@@ -378,5 +378,9 @@ function peutliredeclarationsduminot($id_minot) {
     }
 
     return false;
+}
+
+function peutsignerdeclarationsduminot($id_minot) {
+    return peutliredeclarationduminot($id_minot);
 }
 ?>

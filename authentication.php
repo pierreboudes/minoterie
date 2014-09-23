@@ -78,12 +78,17 @@ function minoterie_getuser() {
 function minoterie_getens() {
     global $link;
     $login = phpCAS::getUser();
-    $query = "SELECT login, id_enseignant, id_minot, t.modification as modification_minot, traitee, definitif,
-                      minoterie_departement.*, nom, prenom
-                 FROM ((SELECT id_enseignant, id_departement, max(modification) as modification
-                                   FROM minoterie_minot WHERE login LIKE '$login'  GROUP BY id_enseignant, id_departement) as t
-                           NATURAL JOIN (minoterie_minot as u)) JOIN minoterie_departement
-                 ON u.id_departement = minoterie_departement.id_departement";
+    $query = "SELECT login, id_enseignant, u.id_minot, t.modification AS
+    modification_minot, traitee, definitif, minoterie_departement . *
+    , nom, prenom, derniere_signature FROM (( ( SELECT id_enseignant,
+    id_departement, max( modification ) AS modification FROM
+    minoterie_minot WHERE login LIKE '$login' GROUP BY id_enseignant,
+    id_departement ) AS t NATURAL JOIN ( minoterie_minot AS u ) ) JOIN
+    minoterie_departement ON u.id_departement =
+    minoterie_departement.id_departement ) LEFT JOIN ( SELECT
+    minoterie_signature.id_minot, max(modification) AS
+    derniere_signature FROM minoterie_signature GROUP BY id_minot ) AS
+    s ON u.id_minot = s.id_minot";
     $result = $link->query($query)  or die("Échec de la requête ".$query."\n".$link->error);
     $ens = array();
     while ($dep = $result->fetch_assoc()) {

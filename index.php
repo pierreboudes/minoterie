@@ -50,7 +50,7 @@ function index_php() {
 	} else {
 	    echo "Vous avez $ndecl déclarations de services dans différents départements.";
 	}
-	echo " Vous pouvez visualiser une déclaration en cliquant sur le triangle à gauche du nom de département ci-dessous, puis l'annoter et la valider en utilisant les boutons.";
+	echo " Vous pouvez visualiser une déclaration en cliquant sur le triangle à gauche du nom de département ci-dessous, puis la valider en utilisant le bouton <em>signer</em>.";
     }
     echo "</p>";
     if (NULL != $user) {
@@ -83,6 +83,7 @@ function index_php() {
 	$nom_d = $dpt["nom_departement"];
 	$url_d = $dpt["url_pain"];
 	$modif = $dpt["modification"];
+	$signee = $dpt["derniere_signature"];
 	$traitee = $dpt["traitee"];
     $definitif = $dpt["definitif"];
 
@@ -92,17 +93,22 @@ function index_php() {
               <td class=\"laction\">
                 <div id=\"basculeminot_$id_m\" class=\"basculeOff\" onclick=\"basculerMinot($id_m, true, $traitee)\">
               </td>
-              <td class=\"nom_departement\">Déclaration transmise par le département $nom_d (depuis <a href=\"$url_d\">pain</a>)</td>
+              <td class=\"nom_departement\">Déclaration transmise par le <a href=\"$url_d\">département $nom_d</a></td>
               <td class=\"modification\">$modif</td>";
     echo "<td class=\"etape\">";
 	if ($definitif) {
-        echo "bilan";
+        echo "service fait";
 	} else {
-	    echo "prévisionnel";
+	    echo "service prévisionnel";
 	}
     echo "<span class=\"hiddenvalue\">$definitif</span></td>";
+	if ($signee != NULL) {
+	    echo "<td class=\"signee\"><div class=\"traiteOn\">signée<div class=\"sub\">$signee</div></div></td>";
+	} else {
+	    echo "<td class=\"signee\"><b>non signée</b></td>";
+	}
 	if ($traitee) {
-	    echo "<td class=\"traite\"><div class=\"traiteOn\">déclaration traitée</div></td>";
+	    echo "<td class=\"traite\"><div class=\"traiteOn\">traitée</div></td>";
 	} else {
 	    echo "<td class=\"traite\" style=\"display:none\"></td>";
 	}

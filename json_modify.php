@@ -1,5 +1,5 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('authentication.php'); 
+require_once('authentication.php');
 $user =  weak_auth();
 require_once("inc_connect.php");
 require_once("utils.php");
@@ -27,7 +27,7 @@ require_once("inc_functions.php");
 
 
 /** Modifie une entrée à partir des nouvelles données reçues dans le contexte HTTP/GET ou POST.
- */ 
+ */
 function json_modify_php($readtype, $id) {
     global $link;
     if ($readtype == "utilisateur") {
@@ -45,28 +45,27 @@ function json_modify_php($readtype, $id) {
 	errmsg("droits insuffisants.");
     }
 
-$champs = array(
-   "utilisateur" => array(
-       "login", "id_departement", "su"
-	),
-    "departement" => array(
-	"nom_departement", "url_pain"
-	),
-    "annotation" => array(
-	"id_minot", "jsannot", "commentaire", "complete"
-	),
-       "minot" => array(
-	   "traitee"
-	)
+    $champs = array(
+        "utilisateur" => array(
+            "login", "id_departement", "su"
+        ),
+        "departement" => array(
+            "nom_departement", "url_pain"
+        ),
+        "annotation" => array(
+            "id_minot", "jsannot", "commentaire", "complete"
+        ),
+        "minot" => array(
+            "traitee"
+        )
     );
-
 
     if (!peutediter($type,$id,NULL)) {
 	    errmsg("droits insuffisants.");
     }
 
     $set = array();
-    
+
     foreach ($champs[$type] as $field) {
 	if (NULL != ($val = getclean($field))) {
 	    $set[$field] = $val;
@@ -83,7 +82,7 @@ $champs = array(
 	}
     };
     $strset = implode(", ", $setsql);
-       
+
     if ($strset != "") { /* il y a de vraies modifs */
 	$query = "UPDATE minoterie_${type} ".
 	    "SET $strset, modification = NOW() ".
@@ -94,12 +93,12 @@ $champs = array(
 	}
 	minoterie_log($query);
     }
-	
+
     /* affichage de la nouvelle entree en json */
     unset($_GET["id_parent"]);
     unset($_POST["id_parent"]);
     include("json_get.php");
-} 
+}
 
 if (NULL == ($readtype = getclean("type"))) {
     errmsg('erreur du script (type manquant).');

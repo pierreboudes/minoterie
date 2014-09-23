@@ -1278,3 +1278,8 @@ li.departement:hover {
 td:hover >.diffoldvalue {
     display: block;
 }
+
+div.sub {
+   font-size: 0.81em;
+   color: grey;
+}
