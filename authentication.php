@@ -112,6 +112,11 @@ function weak_auth() {
     return minoterie_getuser();
 }
 
+function weak_auth_login() {
+    phpCAS::forceAuthentication();
+    return  phpCAS::getUser();
+}
+
 function authrequired() {
     if (!(phpCAS::isAuthenticated())) {
 	header("Location: http://perdu.com");

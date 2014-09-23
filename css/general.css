@@ -1210,9 +1210,11 @@ div.no {
 li.departement > .id_departement, li.departement > .url_pain {
     display: none;
 }
-.nom_departement {
+td.nom_departement {
+    width: 500px;
  font-weight: bold;
 }
+
 li.departement {
  font-weight: bold;
  cursor: pointer;
@@ -1282,4 +1284,9 @@ td:hover >.diffoldvalue {
 div.sub {
    font-size: 0.81em;
    color: grey;
+}
+
+tr.buttonbox > td {
+    height: 3em;
+    text-align: center;
 }

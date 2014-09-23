@@ -40,27 +40,28 @@ function peutimporterdeclarations($id_departement) {
 
 function peutediter($type, $id, $id_parent) {
     if ($id != NULL) {
-	if ($type == "annotation") return peutediterannotation($id, NULL);
-	if ($type == "minot") return peutediterminot($id);
-	if ($type == "cours") return peuteditercours($id);
-	if ($type == "tranche") return peuteditertranche($id);
-	if ($type == "enseignant") return peutediterenseignant($id);
-	if ($type == "service") return peutediterservice($id);
-	if ($type == "choix") return peutediterchoix($id);
-	if ($type == "tag") return peuteditertag($id);
-	if ($type == "collection") return peuteditercollection($id);
+        if ($type == "annotation") return peutediterannotation($id, NULL);
+        if ($type == "minot") return peutediterminot($id);
+        if ($type == "cours") return peuteditercours($id);
+        if ($type == "tranche") return peuteditertranche($id);
+        if ($type == "enseignant") return peutediterenseignant($id);
+        if ($type == "service") return peutediterservice($id);
+        if ($type == "choix") return peutediterchoix($id);
+        if ($type == "tag") return peuteditertag($id);
+        if ($type == "collection") return peuteditercollection($id);
     }
     if ($id_parent != NULL) {
-	if ($type == "annotation") return peutediterannotation(NULL,$id_parent);
-	if ($type == "formation") return peutediterformationdelasformation($id_parent);
-	if ($type == "cours") return peuteditercoursdelaformation($id_parent);
-	if ($type == "tranche") return peuteditertrancheducours($id_parent);
-	if ($type == "service") return peutediterservicedeenseignant($id_parent);
-	if ($type == "choix") return peutchoisir();
-	if ($type == "tag") return peuteditertag($id);
-	if ($type == "tagscours") return peuteditercours($id_parent);
-	if ($type == "collection") return peuteditercollection($id);
-	if ($type == "collectionscours") return peuteditercours($id_parent);
+        if ($type == "signature") return peutsignerdeclarationduminot($id_parent);
+        if ($type == "annotation") return peutediterannotation(NULL,$id_parent);
+        if ($type == "formation") return peutediterformationdelasformation($id_parent);
+        if ($type == "cours") return peuteditercoursdelaformation($id_parent);
+        if ($type == "tranche") return peuteditertrancheducours($id_parent);
+        if ($type == "service") return peutediterservicedeenseignant($id_parent);
+        if ($type == "choix") return peutchoisir();
+        if ($type == "tag") return peuteditertag($id);
+        if ($type == "tagscours") return peuteditercours($id_parent);
+        if ($type == "collection") return peuteditercollection($id);
+        if ($type == "collectionscours") return peuteditercours($id_parent);
     }
     if ($type == "enseignant") return peutproposerenseignant();
     return false;
@@ -358,6 +359,7 @@ function peuttransmettredeclarations($ids) {
 
 function peutliredeclarationsduminot($id_minot) {
     global $login;
+    global $user;
     global $link;
     if ($user["su"] == 1) return true;
     $q = "(
@@ -380,7 +382,7 @@ function peutliredeclarationsduminot($id_minot) {
     return false;
 }
 
-function peutsignerdeclarationsduminot($id_minot) {
-    return peutliredeclarationduminot($id_minot);
+function peutsignerdeclarationduminot($id_minot) {
+    return peutliredeclarationsduminot($id_minot);
 }
 ?>

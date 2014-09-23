@@ -1640,6 +1640,7 @@ function importerDeclarationSel(e) {
     var n = 0;
     var ndecl = 0;
     var nannot = 0;
+    var nsignee = 0;
     var ntrait = 0;
     var noms = new Array();
     /* lecture de la selection */
@@ -1659,6 +1660,10 @@ function importerDeclarationSel(e) {
 	    css.push('annotee');
 	    nannot += 1;
 	}
+	if (existsjQuery(ligne.find('td.signee > div.yes'))) {
+	    css.push('signee');
+	    nsignee += 1;
+	}
 	if (existsjQuery(ligne.find('td.traitee > div.yes'))) {
 	    css.push('traitee');
 	    ntrait += 1;
@@ -1672,12 +1677,14 @@ function importerDeclarationSel(e) {
     }
     /* message utilisateur */
     var msg = "<p>Voulez-vous vraiment importer les déclarations des personnes suivantes ?</p>";
-    if (0 < ntrait + nannot + ndecl) {
+    if (0 < ntrait + nsignee + nannot + ndecl) {
 	msg += "<div class=\"dialog_alert\"><b>Attention certaines déclarations existent déjà dans la minoterie et seront remplacées par votre nouvelle importation :</b> <ul>";
 	if (1 == ndecl) msg += '<li>'+ndecl+' personne a déjà une <span class="declaration">déclaration émise</span></li>';
 	if (1 < ndecl) msg += '<li>'+ndecl+' personnes ont déjà une <span class="declaration">déclaration émise</span></li>';
 	if (1 == nannot) msg += '<li>'+nannot+' de ces déclarations est <span class="annotee">annotée</span></li>';
 	if (1 < nannot) msg += '<li>'+nannot+' de ces déclarations sont <span class="annotee">annotées</span></li>';
+	if (1 == nsignee) msg += '<li>'+nsignee+' de ces déclarations est <span class="signee">signée</span></li>';
+	if (1 < nsignee) msg += '<li>'+nsignee+' de ces déclarations sont <span class="signee">signées</span></li>';
 	if (1 == ntrait) msg += '<li>'+ntrait+' de ces déclarations a <span class="traitee">été traitée</span></li>';
 	if (1 < ntrait) msg += '<li>'+ntrait+' de ces déclarations ont <span class="traitee">été traitées</span></li>';
 	msg += '</ul></div>';
@@ -1793,19 +1800,19 @@ function basculerMinot(e, boutons_prof, traitee) {
 		   $('#table'+type+'s_'+id+' > tbody').append(line);
 		   recalculateSums(type, id, "color_");
 		   /* ajouter les boutons */
-		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
+		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'" class="buttonbox"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
 		   $('#trtableinterventions'+id).after(trbuttonbox);
 		   var buttonbox = $('#buttonboxannot_'+id);
-		   if (boutons && !traitee && !signee) {
+		   if (boutons && !traitee) {
 		       var signer = jQuery('<button class="signer">Signer la déclaration</button>');
 		       signer.button({
 			   text: true,
 			   icons: {
-			       primary: "ui-icon-transferthick-e-w"
+                               primary: "ui-icon-check"
 			   }
 		       });
-		       enregistrer.bind("click", {id: id}, enregistrerAnnotation);
-		       buttonbox.append(enregistrer);
+		       signer.bind("click", {id: id}, enregistrerSignature);
+		       buttonbox.append(signer);
 		   }
 		   if (boutons && traitee) {
 		       buttonbox.html("La déclaration a déjà été traitée.");
@@ -1940,6 +1947,21 @@ function basculerDepartement(e) {
 }
 
 
+
+
+function enregistrerSignature(e) {
+  var id = e.data.id;
+  var url = "json_new.php";
+  var a = {type: "signature",
+           id_parent: id,
+           httptype: "POST"
+          };
+
+  getjson(url, a, function(o) {
+    appliquerSignature(id, o[0]);
+  });
+}
+
 function enregistrerAnnotation(e) {
     var id = e.data.id;
     var a = collecterAnnotation(id);
@@ -1994,6 +2016,8 @@ function collecterAnnotation(id) {
     return o;
 }
 
+
+
 function appliquerAnnotation(id, o) {
     $('#derniere_annot'+id).html('Dernières annotations de la déclaration: '
 				 +o['modification']+'<div class="hiddenvalue">'+o['id_annotation']+'</div>');
@@ -2036,6 +2060,13 @@ function appliquerAnnotation(id, o) {
     }
 }
 
+function appliquerSignature(id, o) {
+    $('#derniere_signature'+id)
+    .html('<div class="traiteOn">signée<div class="sub">'+
+          o['modification']+
+          '</div></div>');
+   $('#buttonboxannot_'+id).html('Déclaration signée');
+}
 
 function left_join_aa(o,d,colonne) {
     var i = 0;

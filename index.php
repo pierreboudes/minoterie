@@ -102,11 +102,13 @@ function index_php() {
 	    echo "service prévisionnel";
 	}
     echo "<span class=\"hiddenvalue\">$definitif</span></td>";
+    echo "<td class=\"signee\" id=\"derniere_signature".$id_m."\">";
 	if ($signee != NULL) {
-	    echo "<td class=\"signee\"><div class=\"traiteOn\">signée<div class=\"sub\">$signee</div></div></td>";
+        echo "<div class=\"traiteOn\">signée<div class=\"sub\">$signee</div></div>";
 	} else {
-	    echo "<td class=\"signee\"><b>non signée</b></td>";
+	    echo "<b>non signée</b>";
 	}
+    echo "</td>";
 	if ($traitee) {
 	    echo "<td class=\"traite\"><div class=\"traiteOn\">traitée</div></td>";
 	} else {

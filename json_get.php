@@ -37,25 +37,29 @@ Les données sont éventuellement calculées par jointures et aggrégats. La sé
 function json_get_php($annee, $readtype) {
     global $link;
     if ($readtype == "utilisateur") {
-	$type = "utilisateur";
-	$npar = array();
-	$order = " ORDER BY nom, prenom ASC";
+        $type = "utilisateur";
+        $npar = array();
+        $order = " ORDER BY nom, prenom ASC";
     } else if ($readtype == "departement") {
-	$type = "departement";
-	$npar = array();
-	$order = " ORDER BY nom_departement ASC";
+        $type = "departement";
+        $npar = array();
+        $order = " ORDER BY nom_departement ASC";
     } else if ($readtype == "minot") {
-	$type = "minot";
-	$npar = array("id_enseignant","id_departement");
-	$order = " ORDER BY modification DESC";
+        $type = "minot";
+        $npar = array("id_enseignant","id_departement");
+        $order = " ORDER BY modification DESC";
     } else if ($readtype == "intervention") {
-	$type = "intervention";
-	$par = "id_minot";
-	$order = " ORDER BY id_intervention ASC";
+        $type = "intervention";
+        $par = "id_minot";
+        $order = " ORDER BY id_intervention ASC";
     } else if ($readtype == "annotation") {
-	$type = "annotation";
-	$par  = "id_minot";
-	$order = " ORDER by modification DESC";
+        $type = "annotation";
+        $par  = "id_minot";
+        $order = " ORDER by modification DESC";
+    } else if ($readtype == "signature") {
+        $type = "signature";
+        $par  = "id_minot";
+        $order = " ORDER by modification DESC";
     } else if ($readtype == "declaration" || $readtype == "declens") {
         $type = $readtype;
         $par = "id_departement";

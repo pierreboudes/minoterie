@@ -20,7 +20,7 @@
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('authentication.php');
-$user = authentication();
+$login = weak_auth_login();
 require_once("inc_connect.php");
 require_once("utils.php");
 require_once("inc_functions.php");
@@ -58,6 +58,7 @@ if (NULL != ($readtype = getclean("type"))) {
     } else if ($readtype == "signature") {
         $type = "signature";
         $par = "id_minot";
+        $_POST["login"] = $login;
     } else {
 	errmsg("type indéfini");
     }
@@ -68,7 +69,7 @@ if (NULL != ($readtype = getclean("type"))) {
 if (NULL != ($id_parent = getnumeric("id_parent"))) {
 
     if (!peutediter($type,NULL,$id_parent)) {
-	errmsg("droits insuffisants.");
+        errmsg("droits insuffisants.");
     }
     $set = array();
     if (isset($par))  {
