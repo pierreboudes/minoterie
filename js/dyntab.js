@@ -142,7 +142,7 @@ function cell() {
 function checkcell() {
     this.name ="checkcell";
     this.mutable = true;
-    this.oneclickedit = true;
+    this.oneclickedit = true; /* éditer d'un clique (au lieu du double-clic) */
     this.guard = null; /* si guard est une checkcell à "oui" l'édition sera impossible */
 
     /* mode edition direct */
@@ -1178,8 +1178,8 @@ function ligne() {
     this.descriptif = new richcell();
     this.descriptif.name = "descriptif";
     /* code_geisha */
-    this.code_geisha = new cell();
-    this.code_geisha.name = "code_geisha";
+/*    this.code_geisha = new cell();
+    this.code_geisha.name = "code_geisha"; */
     /* action */
     this.action = new notcell();
     this.action.setval = function(c,o) {
@@ -1311,8 +1311,10 @@ function ligne() {
     this.nom_cours.name = "nom_cours";
     this.nom_formation = new immutcell();
     this.nom_formation.name = "nom_formation";
-    this.color_code_geisha = new colorcell();
-    this.color_code_geisha.name = "code_geisha";
+    this.color_code_ue = new colorcell();
+    this.color_code_ue.name = "code_ue";
+    this.color_code_etape = new colorcell();
+    this.color_code_etape.name = "code_etape";
     this.color_semestre = new colorcell();
     this.color_semestre.name = "semestre";
     this.nom_departement = new immutcell();
@@ -1726,7 +1728,7 @@ function basculerCategorie(e) {
     return false;
 }
 
-function basculerMinot(e, boutons_annot, traitee) {
+function basculerMinot(e, boutons_prof, traitee) {
     var id;
     var type="minot";
     var boutons = false;
@@ -1738,8 +1740,8 @@ function basculerMinot(e, boutons_annot, traitee) {
 	}
     } else {
 	id = e;
-	if (boutons_annot != undefined) {
-	    boutons = boutons_annot;
+	if (boutons_prof != undefined) {
+	    boutons = boutons_prof;
 	}
     }
     var sid = idString({id: id, type: type});
@@ -1791,7 +1793,8 @@ function basculerMinot(e, boutons_annot, traitee) {
 		   recalculateSums(type, id, "color_");
 		   /* ajouter les commentaires */
 		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
-		   var trcommentaire = jQuery('<tr id="trcommentaireinterventions'+id+'"><td colspan='+colspan+' class="commentaire_annotation"><div class="titre_annotation">Commentaires :</div><textarea id="commentaireannot_'+id+'"></textarea><div id="derniere_annot'+id+'" class="titre_annotation">Aucune annotation enregistrée pour cette déclaration</div></td></tr>');
+                   /* annotations  */
+		   var trcommentaire = jQuery('<tr id="trcommentaireinterventions'+id+'"><td colspan='+colspan+' class="commentaire_annotation"><div class="titre_annotation">Commentaires :</div><textarea id="commentaireannot_'+id+'"></textarea><div id="derniere_annot'+id+'" class="titre_annotation">Aucune annotation enregistrée dans cette déclaration</div></td></tr>');
 		   $('#trtableinterventions'+id).after(trbuttonbox).after(trcommentaire);
 		   var buttonbox = $('#buttonboxannot_'+id);
 		   if (boutons && !traitee) {
@@ -1806,9 +1809,9 @@ function basculerMinot(e, boutons_annot, traitee) {
 		       buttonbox.append(enregistrer);
 		   }
 		   if (boutons && traitee) {
-		       buttonbox.html("Annotation impossible, la déclaration a déjà été traitée.");
+		       buttonbox.html("La déclaration a déjà été traitée.");
 		   }
-                   if (!definitif) {
+                 if (!definitif) {
 		     /* charger les annotations */
 		     getjson("json_get.php", {type: "annotation", id_parent: id},
                              function (o) {
@@ -1850,7 +1853,7 @@ function basculerMinot(e, boutons_annot, traitee) {
                                         var desuetes = new Array(); /* uniquement anciennes interventions */
                                         var recyclees = new Array(); /* interventions du previsionnel reutilises */
                                         /* champs pour les comparaisons */
-                                        var champs = ["semestre", "code_geisha",
+                                        var champs = ["semestre", "code_ue", "code_etape",
                                                       "cm", "td", "tp", "alt"];
                                         for (i = 0; i < n; i += 1) {/* Pour chaque intervention actuelle */
                                           /* Determiner si l'intervention est nouvelle
@@ -1970,7 +1973,8 @@ function collecterAnnotation(id) {
 	var color_tp = $(this).find('td.color_tp > div.hiddenvalue').text();
 	var color_alt = $(this).find('td.color_alt > div.hiddenvalue').text();
 	var color_section = $(this).find('td.color_section > div.hiddenvalue').text();
-	var color_code = $(this).find('td.color_code_geisha > div.hiddenvalue').text();
+	var color_code_ue = $(this).find('td.color_code_ue > div.hiddenvalue').text();
+	var color_code_etape = $(this).find('td.color_code_etape > div.hiddenvalue').text();
 	t.push({id_intervention: idtr,
 		color_intervention: color,
 		ligne_texte: texte,
@@ -1980,7 +1984,8 @@ function collecterAnnotation(id) {
 		color_alt: color_alt,
 		color_section: color_section,
 		color_semestre: color_semestre,
-		color_code: color_code
+		color_code_ue: color_code_ue,
+		color_code_etape: color_code_etape
 	       });
 	return true;
     });
@@ -2025,8 +2030,10 @@ function appliquerAnnotation(id, o) {
         tr.find('td.color_section > div.hiddenvalue').text(ligne['color_section']);
 	tr.find('td.color_semestre').css('background-color', ligne['color_semestre']);
         tr.find('td.color_semestre > div.hiddenvalue').text(ligne['color_semestre']);
-	tr.find('td.color_code_geisha').css('background-color', ligne['color_code']);
-        tr.find('td.color_code_geisha > div.hiddenvalue').text(ligne['color_code']);
+	tr.find('td.color_code_ue').css('background-color', ligne['color_code_ue']);
+        tr.find('td.color_code_ue > div.hiddenvalue').text(ligne['color_code_ue']);
+	tr.find('td.color_code_etape').css('background-color', ligne['color_code_etape']);
+        tr.find('td.color_code_etape > div.hiddenvalue').text(ligne['color_code_etape']);
     }
 }
 
@@ -2880,25 +2887,24 @@ function recalculateSums(type, id, pref) {
     $('#sum'+type+id+' > th.'+pref+'td').html(td);
     $('#sum'+type+id+' > th.'+pref+'tp').html(tp);
     $('#sum'+type+id+' > th.'+pref+'alt').html(alt);
-    $('#sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm+td+tp+alt);
-    $('#sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
+    $('#sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm+td+tp+alt);
+    $('#sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 
     $('#s1sum'+type+id+' > th.'+pref+'htd').html(htd1);
     $('#s1sum'+type+id+' > th.'+pref+'cm').html(cm1);
     $('#s1sum'+type+id+' > th.'+pref+'td').html(td1);
     $('#s1sum'+type+id+' > th.'+pref+'tp').html(tp1);
     $('#s1sum'+type+id+' > th.'+pref+'alt').html(alt1);
-    $('#s1sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm1+td1+tp1+alt1);
-    $('#s1sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
+    $('#s1sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm1+td1+tp1+alt1);
+    $('#s1sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 
     $('#s2sum'+type+id+' > th.'+pref+'htd').html(htd2);
     $('#s2sum'+type+id+' > th.'+pref+'cm').html(cm2);
     $('#s2sum'+type+id+' > th.'+pref+'td').html(td2);
     $('#s2sum'+type+id+' > th.'+pref+'tp').html(tp2);
     $('#s2sum'+type+id+' > th.'+pref+'alt').html(alt2);
-    $('#s2sum'+type+id+' > th.'+pref+'code_geisha').html(1.5*cm2+td2+tp2+alt2);
-    $('#s2sum'+type+id+' > th.'+pref+'code_geisha').css("text-align", "right");
-
+    $('#s2sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm2+td2+tp2+alt2);
+    $('#s2sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 }
 
 /* BLOC ----- PANIER -------------*/

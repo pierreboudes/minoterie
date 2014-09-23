@@ -12,3 +12,6 @@ CREATE TABLE `codesetape` (
   PRIMARY KEY (`id_etape`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
 --- fin commit
+--- commit
+ALTER TABLE  `minoterie_intervention` CHANGE  `code_geisha`  `code_ue` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL ;
+ALTER TABLE  `minoterie_intervention` ADD  `code_etape` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL  after `code_ue`;
