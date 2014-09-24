@@ -87,14 +87,19 @@ function index_php() {
 	$traitee = $dpt["traitee"];
     $definitif = $dpt["definitif"];
 
-	echo "<center><div id=\"departement_$id_d\" class=\"departement\">
-              <table class=\"departement\">
-              <tbody><tr id=\"minot_$id_m\" class=\"minot\">
-              <td class=\"laction\">
-                <div id=\"basculeminot_$id_m\" class=\"basculeOff\" onclick=\"basculerMinot($id_m, true, $traitee)\">
-              </td>
-              <td class=\"nom_departement\">Déclaration transmise par le <a href=\"$url_d\">département $nom_d</a></td>
-              <td class=\"modification\">$modif</td>";
+	echo "<center><div id=\"departement_".$id_d."\" class=\"departement\">";
+    echo "<table class=\"departement\">";
+    echo "<tbody><tr id=\"minot_".$id_m."\" class=\"minot\">";
+    echo "<td class=\"laction\">";
+    echo "<div id=\"basculeminot_$id_m\" class=\"basculeOff\" onclick=\"basculerMinot("
+        .$id_m
+        .", true,"
+        .$traitee
+        ." ,"
+        .(($signee!=NULL)?"true":"false")
+        .")\"></td>";
+    echo "<td class=\"nom_departement\">Déclaration transmise par le <a href=\"$url_d\">département ".$nom_d."</a></td>";
+    echo "<td class=\"modification\">$modif</td>";
     echo "<td class=\"etape\">";
 	if ($definitif) {
         echo "service fait";

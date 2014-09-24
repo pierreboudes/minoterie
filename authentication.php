@@ -40,7 +40,6 @@ function default_year() {
     return $an;
 }
 
-
 /** retourne l'utilisateur enregistré correspondant au login CAS et le cas échéant les départements qu'il administre */
 function minoterie_getuser() {
     global $link;

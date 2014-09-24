@@ -76,23 +76,29 @@ function json_get_php($annee, $readtype) {
                     u.id_minot as id,
                     u.id_minot as id_$type,
                     u.modification as modification_minot,
+                    derniere_signature,
+                    (derniere_signature IS NOT NULL) AS signee,
                     traitee,
                     definitif,
                     nom_departement as departement,
                     u.id_departement,
                     w.id_annotation,
                     w.modification as modification_annotation
-                    FROM  ((SELECT id_enseignant, id_departement, max(modification) as modification
+                    FROM  (((SELECT id_enseignant, id_departement, max(modification) as modification
                                    FROM minoterie_minot
                                    WHERE definitif = $definitives
                                    GROUP BY id_enseignant, id_departement) as t
                            NATURAL JOIN (minoterie_minot as u))
-                      LEFT JOIN
+                    LEFT JOIN
                           ((SELECT id_minot, max(modification) as modification
                                    FROM minoterie_annotation GROUP BY id_minot) as v
                            NATURAL JOIN (minoterie_annotation as w))
                     ON u.id_minot = v.id_minot,
-                       minoterie_departement
+                       minoterie_departement)
+                    LEFT JOIN (( SELECT
+                       minoterie_signature.id_minot, max(modification) AS
+                       derniere_signature FROM minoterie_signature GROUP BY id_minot ) AS s)
+                       ON u.id_minot = s.id_minot
                     WHERE 1
                     AND minoterie_departement.id_departement = u.id_departement ";
         if (($type == "declaration") and (isset($_GET["id_parent"]) || isset($_POST["id_parent"]))) {

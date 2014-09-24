@@ -1737,7 +1737,7 @@ function basculerCategorie(e) {
     return false;
 }
 
-function basculerMinot(e, boutons_prof, traitee) {
+function basculerMinot(e, boutons_prof, traitee, signee) {
     var id;
     var type="minot";
     var boutons = false;
@@ -1800,23 +1800,28 @@ function basculerMinot(e, boutons_prof, traitee) {
 		   $('#table'+type+'s_'+id+' > tbody').append(line);
 		   recalculateSums(type, id, "color_");
 		   /* ajouter les boutons */
-		   var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'" class="buttonbox"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
-		   $('#trtableinterventions'+id).after(trbuttonbox);
-		   var buttonbox = $('#buttonboxannot_'+id);
-		   if (boutons && !traitee) {
+                   if (boutons) {
+		     var trbuttonbox = jQuery('<tr id="trbuttonbox'+id+'" class="buttonbox"><td colspan='+colspan+'><div id="buttonboxannot_'+id+'" class="buttonboxannot"></div></td></tr>');
+		     $('#trtableinterventions'+id).after(trbuttonbox);
+		     var buttonbox = $('#buttonboxannot_'+id);
+		     if ( !traitee && !signee ) {
 		       var signer = jQuery('<button class="signer">Signer la déclaration</button>');
 		       signer.button({
-			   text: true,
-			   icons: {
-                               primary: "ui-icon-check"
-			   }
+			 text: true,
+			 icons: {
+                           primary: "ui-icon-check"
+			 }
 		       });
 		       signer.bind("click", {id: id}, enregistrerSignature);
 		       buttonbox.append(signer);
-		   }
-		   if (boutons && traitee) {
+		     }
+		     if (!traitee && signee) {
+		       buttonbox.html("La déclaration a déjà été signée.");
+		     }
+		     if (traitee) {
 		       buttonbox.html("La déclaration a déjà été traitée.");
-		   }
+		     }
+                   }
                  if (!definitif) {
 		     /* charger les annotations */
 		     getjson("json_get.php", {type: "annotation", id_parent: id},
