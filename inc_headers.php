@@ -1,5 +1,5 @@
 <?php /* -*- coding: utf-8 -*-*/
-/* Minoterie - outil de gestion des services d'enseignement        
+/* Minoterie - outil de gestion des services d'enseignement
  *
  * Copyright 2009-2012 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
@@ -19,12 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('authentication.php'); 
+require_once('authentication.php');
 authrequired();
 
 function entete() {
     /* premier argument : titre de la page */
     /* arguments suivants : des noms de fichiers javascripts à inclure */
+    $git_head = exec('git rev-parse HEAD');
+//    $git_head = $out['0'];
     $narg = func_num_args();
     $titre = func_get_arg(0);
     echo <<<EOD
@@ -39,18 +41,19 @@ function entete() {
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.json-2.3.min.js"></script>
-<script type="text/javascript" src="js/dyntab.js"></script>
+<script type="text/javascript" src="js/dyntab.js?$git_head"></script>
 EOD;
     for($i = 1; $i < $narg; $i++){
 	$arg = func_get_arg($i);
 	$extension = substr($arg, -3); /* si $opt = blabla.css alors $extension = css*/
 	if (0 == strcasecmp($extension, "css")) {
-	    echo "<link rel='stylesheet' href='css/".$arg."' type='text/css' media='all'/>\n";
+	    echo "<link rel='stylesheet' href='css/".$arg."?".$git_head."' type='text/css' media='all'/>\n";
 	} else if (0 == strcasecmp($extension, ".js")) {
-	    echo "<script type='text/javascript' src='js/".$arg."'></script>\n";
+	    echo "<script type='text/javascript' src='js/".
+            $arg."?".$git_head."'></script>\n";
 	} else {
 	    echo $opt."\n";
-	};	
+	};
     }
 /* ------ tweaks --------
 
