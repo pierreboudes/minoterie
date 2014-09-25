@@ -147,7 +147,7 @@ function checkcell() {
 
     /* mode edition direct */
     this.edit = function (c) {
-	if (null != this.guard) {/* */
+	if (null != this.guard) {/* TODO a reprendre, bug */
 	    if (c.siblings("td."+this.guard).find(".yesno").text() == "oui") {
 		return false;
 	    }
@@ -1295,7 +1295,7 @@ function ligne() {
     this.traitee = new sucheckcell();
     this.traitee.name = "traitee";
     this.selectionner = new checkcell();
-    this.selectionner.guard = "traitee";
+/*    this.selectionner.guard = "traitee"; bug de guard */
     this.selectionner.name = "selection";
     this.etape = new etape();
     this.color_line = new colorlinecell();
