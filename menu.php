@@ -68,6 +68,11 @@ function ig_affichermenu() {
     echo '<li><a href="logout.php">logout</a></li>';
     echo '</ul>';
 }
-
+?>
+<div style="position: absolute;">
+<a href="/"><img src="../../img/windmill.png" alt="logo"/></a>
+</div>
+<?php
 ig_affichermenu();
 ig_montreretapedeclarations();
+?>

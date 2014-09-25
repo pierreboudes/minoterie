@@ -1432,7 +1432,7 @@ function getjson(url,data,callback) {
 		     alert("Erreur: "
 			   +e
 			   +" vous avez peut être été déconnecté du CAS, rechargez la page.\n"
-			   +$.toJSON(data));
+			   +JSON.stringify(data));
 		     return;
 		 }
 		 callback(o);
@@ -1608,7 +1608,7 @@ function ajouterBoutonsImportation(jq) {
 					     });
 					     var data = {
 						 httptype: "POST",
-						 interventions: $.toJSON(o),
+						 interventions: JSON.stringify(o),
 						 id_departement: getid_departement()
 					     }
 					     /* envoie des donnees */
@@ -1715,7 +1715,7 @@ function basculerCategorie(e) {
 	getjson("json_get.php",{type: "declaration", id_parent: getid_departement()},
 		function (d) {
 		    var merge_ens_minot = function (o)  {
-			//alert(" o = "+$.toJSON(o) + " d = "+$.toJSON(d));
+			//alert(" o = "+JSON.stringify(o) + " d = "+JSON.stringify(d));
 			o = left_join_aa(o,d,"id_enseignant");
 			return o;
 		    };
@@ -1982,7 +1982,7 @@ function enregistrerAnnotation(e) {
     getjson(url, a, function(o) {
 	/* changer la date et l'id de la dernière declaration */
 	appliquerAnnotation(id, o[0]);
-	//alert($.toJSON(o));
+	//alert(JSON.stringify(o));
     });
 }
 function collecterAnnotation(id) {
@@ -2017,7 +2017,7 @@ function collecterAnnotation(id) {
     });
     var s = $('#commentaireannot_'+id).val();
     var o = {id_minot: id, commentaire: s};
-    o.jsannot = $.toJSON(t);
+    o.jsannot = JSON.stringify(t);
     return o;
 }
 
