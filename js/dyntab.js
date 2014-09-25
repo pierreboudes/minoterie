@@ -1294,9 +1294,9 @@ function ligne() {
     this.signee.name = "signee";
     this.traitee = new sucheckcell();
     this.traitee.name = "traitee";
-    this.selection = new checkcell();
-    this.selection.guard = "traitee";
-    this.selection.name = "selection";
+    this.selectionner = new checkcell();
+    this.selectionner.guard = "traitee";
+    this.selectionner.name = "selection";
     this.etape = new etape();
     this.color_line = new colorlinecell();
     this.color_cm = new colorcell();
@@ -1644,7 +1644,7 @@ function importerDeclarationSel(e) {
     var ntrait = 0;
     var noms = new Array();
     /* lecture de la selection */
-    table.find('td.selection >div.yes').each(function () {
+    table.find('td.selectionner >div.yes').each(function () {
 	var ligne = $(this).closest('tr');
 	var nom;
 	var css = new Array();
