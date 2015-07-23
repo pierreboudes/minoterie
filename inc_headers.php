@@ -1,7 +1,7 @@
 <?php /* -*- coding: utf-8 -*-*/
 /* Minoterie - outil de gestion des services d'enseignement
  *
- * Copyright 2009-2012 Pierre Boudes,
+ * Copyright 2009-2015 Pierre Boudes,
  * département d'informatique de l'institut Galilée.
  *
  * This file is part of Minoterie.
@@ -36,6 +36,7 @@ function entete() {
 <title>Minoterie -- $titre</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel='stylesheet' media='all' href='css/general.css' type='text/css' />
+<link rel='stylesheet' media='print' href='css/print.css' type='text/css' />
 <link type="text/css" href="/jquery-ui-1.11.1.custom/jquery-ui.css" rel="stylesheet" />
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery-migrate-1.2.1.js"></script> <!-- todo remove me -->

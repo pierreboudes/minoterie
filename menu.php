@@ -69,7 +69,7 @@ function ig_affichermenu() {
     echo '</ul>';
 }
 ?>
-<div style="position: absolute;">
+<div style="position: absolute;" id="logo">
 <a href="/"><img src="../../img/windmill.png" alt="logo"/></a>
 </div>
 <?php

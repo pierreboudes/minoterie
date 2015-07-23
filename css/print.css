@@ -1,0 +1,8 @@
+#menu, div.infobox, #logo, #declarationsdefinitives, #departements0 {
+    display: none;
+}
+
+
+@media print {
+    tr.declens + tr.conteneur {page-break-after: always;}
+}
