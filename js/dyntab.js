@@ -1696,12 +1696,28 @@ function importerDeclarationSel(e) {
     return false;
 }
 
+
+/* En cas de meta-click on fait une bascule identique sur les bascules */
+/* de la même section */
+function basculerIdentiques(bascule, e) {
+  if (e.metaKey) {
+    var onoff = ".basculeOff";
+    if (bascule.hasClass('basculeOff')) {
+      onoff = ".basculeOn";
+    }
+    e.preventDefault();
+    var bascules = bascule.closest("tbody").children("tr").children("td.laction").find(onoff).trigger("click");
+  }
+}
+
+
 function basculerCategorie(e) {
     var id = e.data.id;
     var sid = idString({id: id, type: "categorie"});
     var bascule =  $('#basculecat_'+id);
     bascule.toggleClass('basculeOff');
     bascule.toggleClass('basculeOn');
+    basculerIdentiques(bascule, e); /* meta-click */
     if (bascule.hasClass('basculeOff')) {
 	$('#tableenscat_'+id).remove();
 	$('#trtableenscat'+id).remove();
@@ -1757,6 +1773,7 @@ function basculerMinot(e, boutons_prof, traitee, signee) {
     var bascule =  $('#bascule'+type+'_'+id);
     bascule.toggleClass('basculeOff');
     bascule.toggleClass('basculeOn');
+    basculerIdentiques(bascule, e); /* meta-click */
     if (bascule.hasClass('basculeOff')) {
 	$('#tableinterventions_'+id).remove();
 	$('#trtableinterventions'+id).remove();
@@ -1897,7 +1914,7 @@ function basculerMinot(e, boutons_prof, traitee, signee) {
                                                 if (ancienne == null) ancienne = 0;
                                                 td.css("background-color", "yellow");
                                                 td.append('<div class="diffoldvalue">'
-                                                         +'ancien: ' + ancienne
+                                                         + ancienne
                                                          + '</div>');
                                               }
                                             }
@@ -1932,6 +1949,7 @@ function basculerDepartement(e) {
     var bascule =  $('#basculedepartement_'+id);
     bascule.toggleClass('basculeOff');
     bascule.toggleClass('basculeOn');
+    basculerIdentiques(bascule, e); /* meta-click */
     if (bascule.hasClass('basculeOff')) {
 	$('#tabledeclarations_'+id).remove();
 	$('#trtabledeclarations'+id).remove();
