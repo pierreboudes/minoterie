@@ -1280,6 +1280,9 @@ li.departement:hover {
     display: none;
 }
 
+.diffoldvalue::before {
+    content: "ancien: ";
+}
 td:hover >.diffoldvalue {
     display: block;
 }

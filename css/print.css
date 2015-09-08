@@ -4,5 +4,27 @@
 
 
 @media print {
+    tr.declens {
+        border-top: 5px #000 solid;
+    }
     tr.declens + tr.conteneur {page-break-after: always;}
+    .diffoldvalue {
+        display: block;
+        position: relative;
+        text-decoration: line-through;
+        font-weight: normal;
+        color: black;
+        border: none;
+        padding: 0px;
+        background-color: white;
+    }
+    .diffoldvalue::before {
+        content: "";
+    }
+    .diffnew > td.intitule_formation {
+        text-decoration: underline;
+    }
+    .diffremoved {
+        text-decoration: line-through;
+    }
 }
