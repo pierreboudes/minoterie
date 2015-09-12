@@ -19,12 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Minoterie.  If not, see <http://www.gnu.org/licenses/>.
  */
-error_reporting(E_ALL);
-require_once('../../CAS.php');
-// error_reporting(E_ALL & ~E_NOTICE);
-phpCAS::client(CAS_VERSION_2_0,'cas.univ-paris13.fr',443,'/cas/',true);
-// phpCAS::setDebug();
-phpCAS::setNoCasServerValidation();
+require_once('../../multipleCAS.php');
 
 require_once('inc_connect.php');
 require_once('inc_config.php');
@@ -43,7 +38,7 @@ function default_year() {
 /** retourne l'utilisateur enregistré correspondant au login CAS et le cas échéant les départements qu'il administre */
 function minoterie_getuser() {
     global $link;
-    $login = phpCAS::getUser();
+    $login = login();
     $query = "SELECT id_utilisateur, login, su, nom, prenom, minoterie_departement.*
                  FROM minoterie_utilisateur LEFT JOIN minoterie_departement
                  ON minoterie_utilisateur.id_departement = minoterie_departement.id_departement
@@ -76,7 +71,7 @@ function minoterie_getuser() {
 /** retourne la liste des departements dans lesquels l'utlisateur CAS a une declaration */
 function minoterie_getens() {
     global $link;
-    $login = phpCAS::getUser();
+    $login = login();
     $query = "SELECT login, id_enseignant, u.id_minot, t.modification AS
     modification_minot, traitee, definitif, minoterie_departement . *
     , nom, prenom, derniere_signature FROM (( ( SELECT id_enseignant,
@@ -100,8 +95,8 @@ function authentication() {
     phpCAS::forceAuthentication();
     $user = minoterie_getuser();
     if (NULL == $user) {
-	$login = phpCAS::getUser();
-	die("D&eacute;sol&eacute; votre login ($login) n'est pas enregistr&eacute; dans la minoterie. Pour sortir c'est par ici : <a href='logout.php'>logout</a>.");
+        $login = login();
+        die("D&eacute;sol&eacute; votre login ($login) n'est pas enregistr&eacute; dans la minoterie. Pour sortir c'est par ici : <a href='logout.php'>logout</a>.");
     }
     return $user;
 }
@@ -113,7 +108,7 @@ function weak_auth() {
 
 function weak_auth_login() {
     phpCAS::forceAuthentication();
-    return  phpCAS::getUser();
+    return  login();
 }
 
 function authrequired() {

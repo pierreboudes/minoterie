@@ -96,3 +96,13 @@ PRIMARY KEY (  `configuration` )
 
 --- sous git > e7179ccf50b39ee5d339580a817b761714013cbd
 ALTER TABLE  `minoterie_config` ADD  `aide` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT  ''
+
+
+CREATE TABLE IF NOT EXISTS `minoterie_login` (
+  login varchar(40) COLLATE utf8_swedish_ci NOT NULL,
+  provider varchar(40) COLLATE utf8_swedish_ci DEFAULT NULL,
+  alt_login varchar(40) COLLATE utf8_swedish_ci DEFAULT NULL,
+  PRIMARY KEY (login, provider),
+  KEY login (login),
+  KEY alt_login (alt_login)
+) ENGINE = MYISAM;
