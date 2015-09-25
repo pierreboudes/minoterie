@@ -366,7 +366,7 @@ td.nopadding {
     min-width: 140px;
 }
 
-.cm, .td, .tp, .alt, .groupe, .htd, .inscrits, .presents, .tirage,
+.cm, .td, .tp, .alt, .prp, .referentiel, .groupe, .htd, .inscrits, .presents, .tirage,
 .choix_htd, .tranche_htd {
     min-width:30px;
     max-width:60px;
@@ -431,10 +431,10 @@ td.service_annuel, td.service_reel  {
 
 /**** FIN DIMENSIONS ****/
 
-.semestre, .credits, .cm, .td, .tp, .alt, .action, .groupe, .htd, .choix_htd, .tranche_htd {
+.semestre, .credits, .cm, .td, .tp, .alt, .prp, .referentiel, .action, .groupe, .htd, .choix_htd, .tranche_htd {
     text-align: center;
 }
-.color_semestre,  .color_cm, .color_td, .color_tp, .color_alt {
+.color_semestre,  .color_cm, .color_td, .color_tp, .color_alt, .color_prp, .color_referentiel {
     text-align: center;
 }
 
