@@ -115,12 +115,12 @@ function getjsonaofaa($s) {
 function cookieclean($s) {
     global $link;
     if (isset($_COOKIE[$s])) {
-	if(get_magic_quotes_gpc()) {
-	    return trim(htmlspecialchars($link->real_escape_string(stripslashes(($_COOKIE[$s]))), ENT_QUOTES));
-	}
-	else {
-	    return trim(htmlspecialchars($link->real_escape_string($_COOKIE[$s]), ENT_QUOTES));
-	}
+        if(get_magic_quotes_gpc()) {
+            return trim(htmlspecialchars($link->real_escape_string(stripslashes(($_COOKIE[$s]))), ENT_QUOTES));
+        }
+        else {
+            return trim(htmlspecialchars($link->real_escape_string($_COOKIE[$s]), ENT_QUOTES));
+        }
     }
     else return NULL;
 }
