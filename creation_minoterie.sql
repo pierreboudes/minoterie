@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS minoterie_intervention (
   td double unsigned DEFAULT NULL,
   tp double unsigned DEFAULT NULL,
   alt double unsigned DEFAULT NULL,
+  prp double unsigned DEFAULT NULL,
+  referentiel double unsigned DEFAULT NULL,
   modification timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_intervention),
   KEY id_minot (id_minot),

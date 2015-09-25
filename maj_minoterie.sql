@@ -28,6 +28,14 @@ CREATE TABLE IF NOT EXISTS minoterie_signature (
   KEY id_minot (id_minot)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 --- fin commit
+--- commit
+ALTER TABLE `minoterie_intervention` ADD
+  `referentiel` double unsigned DEFAULT NULL
+  AFTER `alt`;
+ALTER TABLE `minoterie_intervention` ADD
+   `prp` double unsigned DEFAULT NULL
+  AFTER `alt`;
+---
 
 
 SELECT login, id_enseignant, u.id_minot, t.modification AS
