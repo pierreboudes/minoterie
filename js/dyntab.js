@@ -535,7 +535,8 @@ intitule_formation.prototype = new immutcell();
  */
 
 function total_complexe(o, nom, prefixe) {
-    var s;
+  var s;
+  alert('tell Pierre minoterie uses total_complexe !');
     s = "<span class='tot_complexe'>"
 	+htdpostes(o[nom])
 	+"</span>"
@@ -819,7 +820,8 @@ collections.prototype = new immutcell();
 /* constructeur du composite nature de l'intervention */
 function nature() {
     this.setval = function (c,o) {
-	var s;
+      var s;
+      alert("tell Pierre minoterie uses composite nature !");
 	c.html('<table class="nature"><tr><td class="ncm">CM</td><td class="nalt">alt</td></tr><tr><td class="ntd">TD</td><td class="ntp">TP</td></tr></table>');
 	c.find("table.nature td").addClass("inact");
 	if (o["cm"] > 0) c.find("td.ncm").removeClass("inact");
@@ -1156,6 +1158,12 @@ function ligne() {
     /* alt */
     this.alt = new numcell();
     this.alt.name = "alt";
+    /* alt */
+    this.prp = new numcell();
+    this.prp.name = "prp";
+    /* alt */
+    this.referentiel = new numcell();
+    this.referentiel.name = "referentiel";
     /* debut */
     this.debut = new datecell();
     this.debut.name = "debut";
@@ -1307,6 +1315,10 @@ function ligne() {
     this.color_tp.name = "tp";
     this.color_alt = new colorcell();
     this.color_alt.name = "alt";
+    this.color_prp = new colorcell();
+    this.color_prp.name = "prp";
+    this.color_referentiel = new colorcell();
+    this.color_referentiel.name = "referentiel";
     this.color_section = new colorcell();
     this.color_section.name = "section";
     this.nom_cours = new immutcell();
@@ -1882,7 +1894,7 @@ function basculerMinot(e, boutons_prof, traitee, signee) {
                                         var recyclees = new Array(); /* interventions du previsionnel reutilises */
                                         /* champs pour les comparaisons */
                                         var champs = ["semestre", "code_ue", "code_etape",
-                                                      "cm", "td", "tp", "alt"];
+                                                      "cm", "td", "tp", "alt", "prp", "referentiel"];
                                         for (i = 0; i < n; i += 1) {/* Pour chaque intervention actuelle */
                                           /* Determiner si l'intervention est nouvelle
                                            * ou si elle recycle une ancienne intervention o[j] */
@@ -2016,6 +2028,8 @@ function collecterAnnotation(id) {
 	var color_td = $(this).find('td.color_td > div.hiddenvalue').text();
 	var color_tp = $(this).find('td.color_tp > div.hiddenvalue').text();
 	var color_alt = $(this).find('td.color_alt > div.hiddenvalue').text();
+	var color_prp = $(this).find('td.color_prp > div.hiddenvalue').text();
+	var color_referentiel = $(this).find('td.color_referentiel > div.hiddenvalue').text();
 	var color_section = $(this).find('td.color_section > div.hiddenvalue').text();
 	var color_code_ue = $(this).find('td.color_code_ue > div.hiddenvalue').text();
 	var color_code_etape = $(this).find('td.color_code_etape > div.hiddenvalue').text();
@@ -2026,6 +2040,8 @@ function collecterAnnotation(id) {
 		color_td: color_td,
 		color_tp: color_tp,
 		color_alt: color_alt,
+                color_prp: color_prp,
+                color_referentiel: color_referentiel,
 		color_section: color_section,
 		color_semestre: color_semestre,
 		color_code_ue: color_code_ue,
@@ -2072,6 +2088,10 @@ function appliquerAnnotation(id, o) {
         tr.find('td.color_tp > div.hiddenvalue').text(ligne['color_tp']);
 	tr.find('td.color_alt').css('background-color', ligne['color_alt']);
         tr.find('td.color_alt > div.hiddenvalue').text(ligne['color_alt']);
+	tr.find('td.color_prp').css('background-color', ligne['color_prp']);
+        tr.find('td.color_prp > div.hiddenvalue').text(ligne['color_prp']);
+	tr.find('td.color_referentiel').css('background-color', ligne['color_referentiel']);
+        tr.find('td.color_referentiel > div.hiddenvalue').text(ligne['color_referentiel']);
 	tr.find('td.color_section').css('background-color', ligne['color_section']);
         tr.find('td.color_section > div.hiddenvalue').text(ligne['color_section']);
 	tr.find('td.color_semestre').css('background-color', ligne['color_semestre']);
@@ -2907,9 +2927,9 @@ function recalculateSums(type, id, pref) {
     }
     /* totaux */
     var body = $('#table'+type+'s_'+id+' > tbody');
-    var htd = 0; var cm = 0; var td = 0; var tp = 0; var alt = 0;
-    var htd1 = 0; var cm1 = 0; var td1 = 0; var tp1 = 0; var alt1 = 0;
-    var htd2 = 0; var cm2 = 0; var td2 = 0; var tp2 = 0; var alt2 = 0;
+    var htd = 0; var cm = 0; var td = 0; var tp = 0; var alt = 0; var prp = 0; var ref = 0;
+    var htd1 = 0; var cm1 = 0; var td1 = 0; var tp1 = 0; var alt1 = 0; var prp1 = 0; var ref1 = 0;
+    var htd2 = 0; var cm2 = 0; var td2 = 0; var tp2 = 0; var alt2 = 0; var prp2 = 0; var ref2 = 0;
     body.children("tr[id^='"+type+"_']").each(function(i) {
 	var linesource = $(this);
 	var line = linesource.clone();
@@ -2918,20 +2938,26 @@ function recalculateSums(type, id, pref) {
 	cm += pFloat(line.children('td.'+pref+'cm').text());
 	    td += pFloat(line.children('td.'+pref+'td').text());
 	    tp += pFloat(line.children('td.'+pref+'tp').text());
-	    alt += pFloat(line.children('td.'+pref+'alt').text());
+            alt += pFloat(line.children('td.'+pref+'alt').text());
+            prp += pFloat(line.children('td.'+pref+'prp').text());
+      	    ref += pFloat(line.children('td.'+pref+'referentiel').text());
 	    if (line.children('td.'+pref+'semestre').text() == '1') {
 		htd1 += pFloat(line.children('td.'+pref+'htd').text());
 		cm1 += pFloat(line.children('td.'+pref+'cm').text());
 		td1 += pFloat(line.children('td.'+pref+'td').text());
 		tp1 += pFloat(line.children('td.'+pref+'tp').text());
-		alt1 += pFloat(line.children('td.'+pref+'alt').text());
+                alt1 += pFloat(line.children('td.'+pref+'alt').text());
+                prp1 += pFloat(line.children('td.'+pref+'prp').text());
+      	        ref1 += pFloat(line.children('td.'+pref+'referentiel').text());
 	    }
 	    if (line.children('td.'+pref+'semestre').text() == '2') {
 		htd2 += pFloat(line.children('td.'+pref+'htd').text());
 		cm2 += pFloat(line.children('td.'+pref+'cm').text());
 		td2 += pFloat(line.children('td.'+pref+'td').text());
 		tp2 += pFloat(line.children('td.'+pref+'tp').text());
-		alt2 += pFloat(line.children('td.'+pref+'alt').text());
+	        alt2 += pFloat(line.children('td.'+pref+'alt').text());
+                prp2 += pFloat(line.children('td.'+pref+'prp').text());
+      	        ref2 += pFloat(line.children('td.'+pref+'referentiel').text());
 	    }
 	line.remove();
 	});
@@ -2939,7 +2965,9 @@ function recalculateSums(type, id, pref) {
     $('#sum'+type+id+' > th.'+pref+'cm').html(cm);
     $('#sum'+type+id+' > th.'+pref+'td').html(td);
     $('#sum'+type+id+' > th.'+pref+'tp').html(tp);
-    $('#sum'+type+id+' > th.'+pref+'alt').html(alt);
+  $('#sum'+type+id+' > th.'+pref+'alt').html(alt);
+  $('#sum'+type+id+' > th.'+pref+'prp').html(prp);
+  $('#sum'+type+id+' > th.'+pref+'referentiel').html(ref);
     $('#sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm+td+tp+alt);
     $('#sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 
@@ -2947,7 +2975,9 @@ function recalculateSums(type, id, pref) {
     $('#s1sum'+type+id+' > th.'+pref+'cm').html(cm1);
     $('#s1sum'+type+id+' > th.'+pref+'td').html(td1);
     $('#s1sum'+type+id+' > th.'+pref+'tp').html(tp1);
-    $('#s1sum'+type+id+' > th.'+pref+'alt').html(alt1);
+  $('#s1sum'+type+id+' > th.'+pref+'alt').html(alt1);
+  $('#s1sum'+type+id+' > th.'+pref+'prp').html(prp1);
+  $('#s1sum'+type+id+' > th.'+pref+'referentiel').html(ref1);
     $('#s1sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm1+td1+tp1+alt1);
     $('#s1sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 
@@ -2955,7 +2985,9 @@ function recalculateSums(type, id, pref) {
     $('#s2sum'+type+id+' > th.'+pref+'cm').html(cm2);
     $('#s2sum'+type+id+' > th.'+pref+'td').html(td2);
     $('#s2sum'+type+id+' > th.'+pref+'tp').html(tp2);
-    $('#s2sum'+type+id+' > th.'+pref+'alt').html(alt2);
+  $('#s2sum'+type+id+' > th.'+pref+'alt').html(alt2);
+  $('#s2sum'+type+id+' > th.'+pref+'prp').html(prp2);
+  $('#s2sum'+type+id+' > th.'+pref+'referentiel').html(ref2);
     $('#s2sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm2+td2+tp2+alt2);
     $('#s2sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 }
