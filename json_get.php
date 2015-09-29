@@ -71,6 +71,7 @@ function json_get_php($annee, $readtype) {
                     u.prenom,
                     u.statut,
                     u.service,
+                    u.section,
                     u.email,
                     u.id_minot,
                     u.id_minot as id,

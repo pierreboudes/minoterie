@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS minoterie_minot (
   prenom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
   nom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
   statut varchar(40) COLLATE utf8_swedish_ci DEFAULT NULL,
+  section int(3) unsigned NOT NULL DEFAULT '0',
   service float unsigned DEFAULT '192',
   email varchar(60) COLLATE utf8_swedish_ci DEFAULT NULL,
   traitee smallint(1) NOT NULL DEFAULT 0,

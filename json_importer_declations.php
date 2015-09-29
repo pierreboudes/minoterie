@@ -58,10 +58,10 @@ function json_importer_declarations_php() {
 	    }
 
 	    /* faire un nouveau minot */
-	    $q = "INSERT INTO minoterie_minot (id_departement, id_enseignant, login, prenom, nom, email, statut, service, definitif)".
+	    $q = "INSERT INTO minoterie_minot (id_departement, id_enseignant, login, prenom, nom, email, statut, section, service, definitif)".
 		"VALUES (".$id_departement.", ".$id_enseignant.", ".$ligne["login"].
 		", ".$ligne["prenom"].", ".$ligne["nom"].", ".$ligne["email"].
-                ", ".$ligne["statut"].", ".$ligne["service"].", $definitif);";
+                ", ".$ligne["statut"].", ".$ligne["id_section"].", ".$ligne["service"].", $definitif);";
 	    if (!$link->query($q)) {
 		errmsg("erreur avec la requete :\n".$q."\n".$link->error);
 	    }
@@ -71,7 +71,7 @@ function json_importer_declarations_php() {
              $ligne["parfum"].", ".
 	    $ligne["id_cours"].", ".$ligne["semestre"].", ".$ligne["nom_cours"].", ".$ligne["code_ue"].", ".
         ($ligne["code_etape_cours"]==null?$ligne["code_etape_formation"]:$ligne["code_etape_cours"]).", ".
-	    $ligne["section"].", ".$ligne["cm"].", ".$ligne["td"].", ".$ligne["tp"].", ".$ligne["alt"].", ".
+	    $ligne["section_cours"].", ".$ligne["cm"].", ".$ligne["td"].", ".$ligne["tp"].", ".$ligne["alt"].", ".
         $ligne["prp"].", ".$ligne["referentiel"].", ".
         $ligne["declarer"].")";
     }

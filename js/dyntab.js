@@ -1303,6 +1303,8 @@ function ligne() {
     this.traitee = new sucheckcell();
     this.traitee.name = "traitee";
     this.selectionner = new checkcell();
+    this.section = new immutcell();
+    this.section.name = "section";
 /*    this.selectionner.guard = "traitee"; bug de guard */
     this.selectionner.name = "selection";
     this.etape = new etape();

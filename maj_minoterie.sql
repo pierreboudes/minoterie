@@ -35,7 +35,12 @@ ALTER TABLE `minoterie_intervention` ADD
 ALTER TABLE `minoterie_intervention` ADD
    `prp` double unsigned DEFAULT NULL
   AFTER `alt`;
----
+--- fin commit
+--- commit
+ALTER TABLE `minoterie_minot` ADD
+      `section` int(3) unsigned NOT NULL DEFAULT '0'
+  AFTER `statut`;
+--- fin commit
 
 
 SELECT login, id_enseignant, u.id_minot, t.modification AS
