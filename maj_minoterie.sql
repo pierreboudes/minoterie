@@ -1,5 +1,5 @@
 -- revision 743
-ALTER TABLE  `minoterie_intervention` ADD  `declarer` text COLLATE utf8_swedish_ci NOT NULL DEFAULT '' AFTER `alt`;
+ALTER TABLE  `minoterie_intervention` ADD  `declarer` text COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `alt`;
 -- fin revision 743
 
 
@@ -13,20 +13,20 @@ CREATE TABLE `codesetape` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
 --- fin commit
 --- commit 0382cfb1089c25bf9a5333b7c444ebf5db7ffc7f
-ALTER TABLE  `minoterie_intervention` CHANGE  `code_geisha`  `code_ue` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL ;
-ALTER TABLE  `minoterie_intervention` ADD  `code_etape` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL  after `code_ue`;
+ALTER TABLE  `minoterie_intervention` CHANGE  `code_geisha`  `code_ue` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
+ALTER TABLE  `minoterie_intervention` ADD  `code_etape` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL  after `code_ue`;
 --- fin commit
 --- commit  2f5b19e87b7651abfb3757399e666a0719a5b679
 CREATE TABLE IF NOT EXISTS minoterie_signature (
   id_signature mediumint(8) NOT NULL AUTO_INCREMENT,
   id_minot mediumint(8) NOT NULL,
-  login varchar(40) COLLATE utf8_swedish_ci NOT NULL,
-  prenom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
-  nom varchar(40) COLLATE utf8_swedish_ci NOT NULL,
+  login varchar(40) COLLATE utf8_general_ci NOT NULL,
+  prenom varchar(40) COLLATE utf8_general_ci NOT NULL,
+  nom varchar(40) COLLATE utf8_general_ci NOT NULL,
   modification timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_signature),
   KEY id_minot (id_minot)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 --- fin commit
 --- commit
 ALTER TABLE `minoterie_intervention` ADD
