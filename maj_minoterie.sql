@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS minoterie_signature (
   KEY id_minot (id_minot)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 --- fin commit
---- commit
+--- commit 3eb022307f5db9e53b1307e644b02d5140955dc7
 ALTER TABLE `minoterie_intervention` ADD
   `referentiel` double unsigned DEFAULT NULL
   AFTER `alt`;
@@ -36,7 +36,7 @@ ALTER TABLE `minoterie_intervention` ADD
    `prp` double unsigned DEFAULT NULL
   AFTER `alt`;
 --- fin commit
---- commit
+--- commit 64ee2673082e60e3c73ec7ed60b596f1bb265776
 ALTER TABLE `minoterie_minot` ADD
       `section` int(3) unsigned NOT NULL DEFAULT '0'
   AFTER `statut`;
@@ -54,3 +54,9 @@ SELECT login, id_enseignant, u.id_minot, t.modification AS
     minoterie_signature.id_minot, max(modification) AS
     derniere_signature FROM minoterie_signature GROUP BY id_minot ) AS
     s ON u.id_minot = s.id_minot
+
+
+
+-- commit
+ALTER TABLE `codesue` ADD `id_codeue` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;
+--- fin commit
