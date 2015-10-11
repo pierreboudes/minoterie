@@ -23,6 +23,7 @@
 
 var hasTouch = false;
 var clickeditmode = false;
+var extendedcommand = false;
 
 function geturlpain() {
     return $('#user').find('.url_pain').text();
@@ -42,6 +43,22 @@ $(document).ready(function(){
 
 	(function () {/* espace de nom privé */
 	    var timerid;
+            var timerextend;
+
+                $(document).keypress(function (e) {
+                  if (e.which == (97 + 23) ) { /* a = 97, ajouter 23 donne x */
+                    window.clearTimeout(timerextend);
+                    timerextend = window.setTimeout(function () {
+                      extendedcommand = false;
+                      console.log('extended command off')
+                    }, 4000); /* 4s après */
+                    extendedcommand = true;
+                    console.log('extended command on !')
+                    return false;
+                  }
+                  return true;
+                }
+                                    );
 
 	    function clickedit () {
 		var bouton = $('#bouton-clickedit');
@@ -1714,16 +1731,19 @@ function importerDeclarationSel(e) {
 /* En cas de meta-click on fait une bascule identique sur les bascules */
 /* de la même section */
 function basculerIdentiques(bascule, e) {
-  if (e.metaKey) {
+  if (e.metaKey || extendedcommand) {
     var onoff = ".basculeOff";
     if (bascule.hasClass('basculeOff')) {
       onoff = ".basculeOn";
+    }
+    if (extendedcommand) {
+      extendedcommand = false;
+      console.log('extended command off');
     }
     e.preventDefault();
     var bascules = bascule.closest("tbody").children("tr").children("td.laction").find(onoff).trigger("click");
   }
 }
-
 
 function basculerCategorie(e) {
     var id = e.data.id;
