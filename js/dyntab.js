@@ -51,10 +51,10 @@ $(document).ready(function(){
                     timerextend = window.setTimeout(function () {
                       extendedcommand = false;
                       console.log('extended command off')
-                    }, 4000); /* 4s après */
+                    }, 2000); /* 2s après */
                     extendedcommand = true;
                     console.log('extended command on !')
-                    return false;
+                    return true;
                   }
                   return true;
                 }
