@@ -547,65 +547,6 @@ function intitule_formation() {
 }
 intitule_formation.prototype = new immutcell();
 
-/*
- * fonctions auxilliaires pour les cellules affichant des totaux
- */
-
-function total_complexe(o, nom, prefixe) {
-  var s;
-  alert('tell Pierre minoterie uses total_complexe !');
-    s = "<span class='tot_complexe'>"
-	+htdpostes(o[nom])
-	+"</span>"
-	+"<span class='tot_detail_conteneur'> "
-	+"<span class='tot_detail'>=&nbsp;"
-	+htdpostes(1.5*o[prefixe+"cm"])
-	+'&nbsp;CM +&nbsp;'
-	+htdpostes(o[prefixe+"td"])
-	+'&nbsp;TD +&nbsp;'
-	+htdpostes(o[prefixe+"tp"])
-	+'&nbsp;TP +&nbsp;'
-	+htdpostes(o[prefixe+"alt"])
-	+'&nbsp;alt'
-	+"</span>"
-	+"</span>";
-    return s;
-}
-
-function load_totaux(c,o) {
-    c.removeClass('inactive');
-    c.text('attente de données '+o["type"]+o["id"]);
-    getjson("json_totaux.php",
-	    {id: o["id"], type: o["type"]},
-	    function (o) {
-		var s = "";
-		s += total_complexe(o, "total", "");
-		s += ' postes ';
-		s += '=&nbsp;';
-		s += htdpostes(o["servi"])+'&nbsp;servis +&nbsp;';
-		s += total_complexe(o, "mutualise", "mutualise");
-		s += ' mutualisés +&nbsp;';
-		s += total_complexe(o, "libre", "libre");
-		s += ' à pourvoir +&nbsp;';
-		s += htdpostes(o["annule"])+'&nbsp;annulés';
-		s += '<br/>Département: ';
-		s += htdpostes(parseFloat(o["permanents"]) + parseFloat(o["nonpermanents"]) + parseFloat(o["libre"]))+'  = ';
-		s += total_complexe(o, "permanents", "perm");
-		s += ' permanents +&nbsp;';
-		s += total_complexe(o, "nonpermanents", "nperm");
-		s += ' non permanents +&nbsp;';
-		s += total_complexe(o, "libre", "libre");
-		s += ' à pourvoir';
-		s += '<br/>Extérieurs: '+htdpostes(parseFloat(o["exterieurs"]) + parseFloat(o["autre"]))+' = ';
-		s += total_complexe(o, "exterieurs", "ext");
-		s += ' servis +&nbsp;';
-		s += total_complexe(o, "autre", "autre");
-		s += ' inconnus';
-		s += '<div style="float: right">['+Math.round(o["etu"])+'h étu.]</div>';
-		c.html(s);
-		c.find(".tot_detail").bind('click', function (e) {$(this).toggleClass("forceinline");});
-	    });
-}
 
 /* constructeur du composite totaux */
 function totaux() {
@@ -2990,7 +2931,15 @@ function recalculateSums(type, id, pref) {
   $('#sum'+type+id+' > th.'+pref+'alt').html(alt);
   $('#sum'+type+id+' > th.'+pref+'prp').html(prp);
   $('#sum'+type+id+' > th.'+pref+'referentiel').html(ref);
-    $('#sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm+td+tp+alt);
+  var totcomplex = "<span class='tot_complexe'>"+
+      (1.5*cm+td+tp+alt+prp+ref)+
+      "</span>"+
+      "<span class='tot_detail_conteneur'><span class='tot_detail'>"+
+      "= " + (1.5*cm+td+tp+alt) + " HTD présentiel</br>" +
+      "+ " + prp + " PRP</br>" +
+      "+ " + ref + " réf." +
+      "</span></span>";
+    $('#sum'+type+id+' > th.'+pref+'code_ue').html(totcomplex);
     $('#sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 
     $('#s1sum'+type+id+' > th.'+pref+'htd').html(htd1);
@@ -3000,7 +2949,7 @@ function recalculateSums(type, id, pref) {
   $('#s1sum'+type+id+' > th.'+pref+'alt').html(alt1);
   $('#s1sum'+type+id+' > th.'+pref+'prp').html(prp1);
   $('#s1sum'+type+id+' > th.'+pref+'referentiel').html(ref1);
-    $('#s1sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm1+td1+tp1+alt1);
+    $('#s1sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm1+td1+tp1+alt1+prp1+ref1);
     $('#s1sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 
     $('#s2sum'+type+id+' > th.'+pref+'htd').html(htd2);
@@ -3010,7 +2959,7 @@ function recalculateSums(type, id, pref) {
   $('#s2sum'+type+id+' > th.'+pref+'alt').html(alt2);
   $('#s2sum'+type+id+' > th.'+pref+'prp').html(prp2);
   $('#s2sum'+type+id+' > th.'+pref+'referentiel').html(ref2);
-    $('#s2sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm2+td2+tp2+alt2);
+    $('#s2sum'+type+id+' > th.'+pref+'code_ue').html(1.5*cm2+td2+tp2+alt2+prp2+ref2);
     $('#s2sum'+type+id+' > th.'+pref+'code_ue').css("text-align", "right");
 }
 
